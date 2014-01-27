@@ -13,5 +13,14 @@ and open the template in the editor.
     margin-left:auto;
     margin-right:auto;
     height:auto;
+    padding:5px;
     background-color:#FF0000;
+}
+
+header
+{
+   width:950px;
+   margin-left:auto;
+   margin-right:auto;
+   background-color:#00aeef
 }
