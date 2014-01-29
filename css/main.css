@@ -7,20 +7,62 @@ and open the template in the editor.
     Created on : 27-Jan-2014, 12:16:54
     Author     : Andrew
 */
+
+body
+{
+    background-image:url('../images/background.png');
+    background-repeat:repeat;
+    font-size:12px;
+}
+
 .wrapper
 {
     width:960px;
     margin-left:auto;
     margin-right:auto;
     height:auto;
-    padding:5px;
-    background-color:#FF0000;
+    padding:0px;
+    box-shadow: 5px 0 15px -4px rgba(128, 128, 128, 0.8), -5px 0 8px -4px rgba(128, 128, 128, 0.8);
 }
 
-header
-{
-   width:950px;
-   margin-left:auto;
-   margin-right:auto;
-   background-color:#00aeef
+.mainnav .navbar-brand {
+  float: left;
+  padding: 0px 15px;
+  font-size: 12px;
+  line-height: 21px;
+  padding-bottom:5px;
 }
+
+.mainnav .navbar-nav > li > a
+{
+    padding-top:20px;
+    padding-bottom:20px;
+    font-size:1.5em;
+ }
+
+.navbar
+{
+    margin-bottom:0px;
+}
+  
+ .maincontent
+ {
+     background-color:#FFFFFF;
+     padding:5px;
+ }
+
+ #navbar_profile
+ {
+     padding-bottom:20px;
+     padding-top:20px;
+ }
+ 
+ footer
+ {
+     background-color:#333333;
+     border-color:#222222;
+     height:25px;
+     text-align:center;
+     color:#FFFFFF;
+     text-decoration:none;
+ }
