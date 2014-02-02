@@ -9,7 +9,7 @@
     <a class='navbar-brand' href='#'><img src='images/logo.png' height='55px'/></a>
   </div>
     <ul class='nav navbar-nav'>
-      <li><a href='#'>Home</a></li>
+      <li><a href=''>Home</a></li>
       <li><a href='#'>About Us</a></li>
       <li><a href='#'>Research</a></li>
       <li><a href='#'>Publications</a></li>

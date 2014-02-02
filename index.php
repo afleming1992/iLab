@@ -1,31 +1,15 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Heriot-Watt Interaction Lab</title>
-        <link href="css/bootstrap.css" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="css/main.css">
-</head>
-<body> 
-    <div class='wrapper'>
-      <header>
-        <?php
-          include('navbar.php')
-        ?>
-      </header>
-      <div class='maincontent'>
-        <div style='float:left'>
-          
-        </div>
-        <div style='float:right'>
-          <div class='row'>
+<?php
+    error_reporting(E_ALL ^ E_NOTICE);
+    session_start();
 
-          </div>
-        </div>
-      </div>
-      <footer>
-        <b>Footer</b>
-      </footer>
-    </div>
-</body>
-</html>
+    function loadClass($className)
+    {
+        require_once 'classes/'.$className.'.class.php';
+    }
+    spl_autoload_register('loadClass');
+
+    require_once('config/config.php');
+
+    $db = new Database($server, $database, $user, $password, $table_prefix);
+
+    require_once('controller/controller.php');

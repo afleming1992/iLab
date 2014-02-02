@@ -10,8 +10,7 @@ and open the template in the editor.
 
 body
 {
-    background-image:url('../images/background.png');
-    background-repeat:repeat;
+    background: url('../images/background.png') repeat;
     font-size:12px;
 }
 
@@ -27,10 +26,9 @@ body
 
 .mainnav .navbar-brand {
   float: left;
-  padding: 0px 15px;
+  padding: 0 5px 0 15px;
   font-size: 12px;
   line-height: 21px;
-  padding-bottom:5px;
 }
 
 .mainnav .navbar-nav > li > a
@@ -48,7 +46,8 @@ body
  .maincontent
  {
      background-color:#FFFFFF;
-     padding:5px;
+     padding:10px;
+     height:auto;
  }
 
  #navbar_profile
@@ -57,10 +56,14 @@ body
      padding-top:20px;
  }
  
- footer
+ .slider
  {
-     background-color:#333333;
-     border-color:#222222;
+     display:inline-block;
+     height:627px;
+ }
+ 
+ .footer
+ {
      height:25px;
      text-align:center;
      color:#FFFFFF;
