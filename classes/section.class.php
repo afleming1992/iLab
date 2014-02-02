@@ -15,7 +15,7 @@ class section
     private $name;
     private $restricted;
 
-    public function _construct($db,$sectionId)
+    public function __construct($db,$sectionId)
     {
         $this->db = $db;
         $this->sectionId = $sectionId;
@@ -34,14 +34,13 @@ class section
         }
     }
 
-    public function getSection()
+    public function getDetails()
     {
-        $result = $this->db->query("SELECT * FROM ".$this->db->getPrefix()."section WHERE section_id = $this->getSectionId()");
-        $data = $result->fetch();
+        $result = $this->db->query("SELECT * FROM ".$this->db->getPrefix()."section WHERE section_id = '".$this->getSectionId()."'");
         if($result)
         {
+            $data = $result->fetch();
             $this->setHomepage(new Page($this->db,$data['homepage_id']));
-            $this->getHomepage()->getPageDetails();
             $this->setName($data['name']);
             $this->setRestricted($data['restricted']);
             return true;

@@ -11,12 +11,12 @@ class Database
     private $db;
     private $prefix;
 
-    public function  _construct($server, $database, $user, $password,$prefix)
+    public function __construct($server, $database, $user, $password,$prefix)
     {
         try
         {
-            $this->db = new PDO("mysql:host=$server;dbname=$database",$user,$password);
-
+            $this->setDb(new PDO("mysql:host=$server;dbname=$database",$user,$password));
+            $this->setPrefix($prefix);
         }
         catch(Exception $e)
         {
@@ -44,6 +44,16 @@ class Database
     public function setPrefix($prefix)
     {
         $this->prefix = $prefix;
+    }
+
+    public function getDb()
+    {
+        return $this->db;
+    }
+
+    public function setDb($db)
+    {
+        $this->db = $db;
     }
 
 } 

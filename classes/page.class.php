@@ -6,7 +6,7 @@
  * Time: 18:43
  */
 
-class page {
+class Page {
     private $db;
 
     private $pageId;
@@ -19,7 +19,7 @@ class page {
     private $time_last_updated;
     private $module;
 
-    public function _construct($db,$pageId)
+    public function __construct($db,$pageId)
     {
         $this->setDB($db);
         $this->setPageId($pageId);
@@ -27,12 +27,21 @@ class page {
 
     public function getPageDetails()
     {
-        $result = $this->db->query("SELECT * FROM ".$this->db->getPrefix()."page WHERE page_id = $this->pageId");
+        $result = $this->db->query("SELECT * FROM ".$this->db->getPrefix()."page WHERE page_id = '".$this->getPageId()."'");
+        $rowCount = $result->rowCount();
         $data = $result->fetch();
-        if($result != false)
+        if($rowCount == 1)
         {
             $this->setSection(new Section($this->db,$data['section']));
+            $this->getSection()->getDetails();
             $this->setAuthor(new Profile($this->db,$data['author']));
+            $this->getAuthor()->getProfile();
+            $this->setTitle($data['title']);
+            $this->setContent($data['content']);
+            $this->setRestricted($data['restricted']);
+            $this->setTimeCreated($data['time_created']);
+            $this->setTimeLastUpdated($data['time_last_updated']);
+            $this->setModule($data['module']);
             return true;
         }
         else

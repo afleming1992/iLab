@@ -22,7 +22,7 @@ class profile
     private $photo;
     private $role;
 
-    public function _construct($db,$username)
+    public function __construct($db,$username)
     {
         $this->db = $db;
         $this->username = $username;
@@ -44,7 +44,7 @@ class profile
 
     public function getProfile()
     {
-        $result = $this->db->query("SELECT * FROM ".$this->db->getPrefix()."profile WHERE username = '$this->getUsername()'");
+        $result = $this->db->query("SELECT * FROM ".$this->db->getPrefix()."profile WHERE username = '".$this->getUsername()."'");
         if($result)
         {
             $data = $result->fetch();

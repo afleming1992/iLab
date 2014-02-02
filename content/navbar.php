@@ -6,11 +6,11 @@
       <span class='icon-bar'></span>
       <span class='icon-bar'></span>
     </button>
-    <a class='navbar-brand' href='#'><img src='images/logo.png' height='55px'/></a>
+    <a class='navbar-brand' href='index.php'><img src='images/logo.png' height='55px'/></a>
   </div>
     <ul class='nav navbar-nav'>
-      <li><a href=''>Home</a></li>
-      <li><a href='#'>About Us</a></li>
+      <li><a href='index.php'>Home</a></li>
+      <li><a href='?mode=content&id=1'>About Us</a></li>
       <li><a href='#'>Research</a></li>
       <li><a href='#'>Publications</a></li>
       <li><a href='#'>Intranet</a></li>

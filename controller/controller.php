@@ -14,6 +14,11 @@
     {
         $mode = $_GET['mode'];
         //Do Exit at the end of each Control Function
+        if(strcmp($mode,"content") == 0)
+        {
+            $app->loadContentPage($_GET['id']);
+            exit();
+        }
     }
     else
     {
