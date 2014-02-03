@@ -1,11 +1,9 @@
 <div class="row col-md-14">
-        <div class="col-md-2">
+        <div class="col-md-3">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h1 class="panel-title">
-                        <?php $page->getSection()->getDetails();
-                              echo $page->getSection()->getName();
-                        ?>
+                        Navigation
                     </h1>
                 </div>
                 <div class="panel-body" style="padding:0">
@@ -14,8 +12,18 @@
                     ?>
                 </div>
             </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h1 class="panel-title">
+                       Page Admin
+                    </h1>
+                </div>
+                <div class="panel-body" style="padding:0">
+
+                </div>
+            </div>
          </div>
-        <div class="col-md-10">
+        <div class="col-md-9">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h1 class="panel-title">

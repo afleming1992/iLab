@@ -21,7 +21,7 @@
                         <img class="media-object" src="images/test-news.jpg" alt="" />
                     </a>
                     <div class="media-body">
-                        <h5 class="media-heading">News Item</h4>
+                        <h5 class="media-heading">News Item</h5>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque placerat mollis ipsum ac cras amet.
                     </div>
                 </div>
@@ -30,7 +30,7 @@
                         <img class="media-object" src="images/test-news.jpg" alt="" />
                     </a>
                     <div class="media-body">
-                        <h5 class="media-heading">News Item</h4>
+                        <h5 class="media-heading">News Item</h5>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque placerat mollis ipsum ac cras amet.
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                         <img class="media-object" src="images/test-news.jpg" alt="" />
                     </a>
                     <div class="media-body">
-                        <h5 class="media-heading">News Item</h4>
+                        <h5 class="media-heading">News Item</h5>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque placerat mollis ipsum ac cras amet.
                     </div>
                 </div>

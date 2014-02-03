@@ -30,9 +30,9 @@ class Page {
         $result = $this->db->query("SELECT * FROM ".$this->db->getPrefix()."page WHERE page_id = '".$this->getPageId()."'");
         $rowCount = $result->rowCount();
         $data = $result->fetch();
-        if($rowCount == 1)
+        if($rowCount > 0)
         {
-            $this->setSection(new Section($this->db,$data['section']));
+            $this->setSection(new SectionInfo($this->db,$data['section']));
             $this->getSection()->getDetails();
             $this->setAuthor(new Profile($this->db,$data['author']));
             $this->getAuthor()->getProfile();

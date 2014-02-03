@@ -20,14 +20,14 @@ class user {
     {
         $this->setDb($db);
         $this->setUsername($username);
-        $this->setPassword($username);
+        $this->setPassword($password);
         $this->setProfile(new Profile($this->db,$this->username));
     }
 
     public function createUser()
     {
         $this->setNewSalt();
-        $this->setPassword($this->getSalt()."".$this->getPassword());
+        $this->setPassword(md5($this->getSalt()."".$this->getPassword()));
         $result = $this->db->exec("INSERT INTO ".$this->db->getPrefix()."user (username,password,access_level,hidden) VALUES ('$this->getUsername()','$this->getRealName()','$this->getPassword()','$this->getAccessLevel()','$this->getHidden()','$this->getSalt()')");
         if($result)
         {
@@ -65,17 +65,21 @@ class user {
     public function checkPassword()
     {
         $result = $this->db->query("SELECT * FROM user where username = '". $this->username ."'");
-        $data = $result->fetch();
-
-        //We get our Salt from the Database (As it's Randomly Generated for each user and when they change their Password)
-        $this->setSalt($data['salt']);
-        $this->setPassword(md5($this->getSalt ."".$this->getPassword()));
-
-        if($result != false && $this->password == $data['password'])
+        if($data = $result->fetch())
         {
-            $this->setAccessLevel($data['access_level']);
-            $this->hidden($data['hidden']);
-            return true;
+            //We get our Salt from the Database (As it's Randomly Generated for each user and when they change their Password)
+            $this->setSalt($data['salt']);
+            $this->setPassword(md5($this->getSalt()."".$this->getPassword()));
+            if($result != false && $this->password == $data['password'])
+            {
+                $this->setAccessLevel($data['access_level']);
+                $this->setHidden($data['hidden']);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         else
         {
@@ -86,7 +90,7 @@ class user {
     public function updatePassword($newPassword)
     {
         $this->setNewSalt();
-        $this->setPassword(md5($this->getSalt ."".$newPassword));
+        $this->setPassword(md5($this->getSalt()."".$newPassword));
     }
 
     //Getters and Setters
