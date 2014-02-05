@@ -62,18 +62,47 @@ class mainController
         $page = new Page($this->getDb(),$id);
         if($page->getPageDetails())
         {
-            $section = $page->getSection()->getSectionId();
-            $sideNav = $this->getNavController()->loadSideNavigation($section);
-            include('content/content.php');
+            if(!$page->getRestricted() || ($page->getRestricted() && isset($_SESSION['login'])))
+            {
+                $section = $page->getSection()->getSectionId();
+                $sideNav = $this->getNavController()->loadSideNavigation($section);
+                $adminSection = $this->getNavController()->loadPageAdmin($_GET['mode'],$id);
+                include('content/content.php');
+            }
+            else
+            {
+                $this->loadLoginRequired();
+            }
         }
         else
         {
-            $this->pageNotFound();
+            $this->contentNotFound();
         }
         $this->loadFooter();
     }
 
+    public function loadCreatePage()
+    {
+        $result = $this->getDb()->query("SELECT * FROM section");
+        $sections = "";
+        if($result)
+        {
+            while($data = $result->fetch())
+            {
+                $sections .= "<option value='".$data['section_id']."'>".$data['name']."</option>";
+            }
+        }
+        $this->loadPageHeader();
+        include("forms/editPage.php");
+        $this->loadFooter();
+    }
+
     //Part Loaders
+    public function loadLoginRequired()
+    {
+        echo "<div class='alert alert-warning'><h3>Sorry!</h3> This page is restricted to iLab staff only! Please login to confirm your identidy!</div>";
+        include('forms/login.php');
+    }
 
     public function loadPageHeader()
     {
@@ -81,7 +110,7 @@ class mainController
         include('content/header.php');
     }
 
-    public function pageNotFound()
+    public function contentNotFound()
     {
         include('content/404.php');
     }
@@ -89,6 +118,13 @@ class mainController
     public function loadFooter()
     {
         include('content/footer.php');
+    }
+
+    public function pageNotFound()
+    {
+        $this->loadPageHeader();
+        $this->contentNotFound();
+        $this->loadFooter();
     }
 
     /**

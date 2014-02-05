@@ -18,6 +18,7 @@ class Page {
     private $time_created;
     private $time_last_updated;
     private $module;
+    private $navOveride;
 
     public function __construct($db,$pageId)
     {
@@ -42,6 +43,7 @@ class Page {
             $this->setTimeCreated($data['time_created']);
             $this->setTimeLastUpdated($data['time_last_updated']);
             $this->setModule($data['module']);
+            $this->setNavOveride($data['navOverride']);
             return true;
         }
         else
@@ -52,7 +54,7 @@ class Page {
 
     public function updatePage()
     {
-        $result = $this->db->exec("UPDATE ".$this->db->getPrefix()."page SET section = ");
+        $result = $this->db->exec("UPDATE ".$this->db->getPrefix()."page SET section = '".$this->getSection()->getSectionId()."', author = '".$this->getAuthor()->getUsername()."', title = '".$this->getTitle()."', content = '".$this->getContent()."', restricted = '".$this->getRestricted()."', time_last_updated = '".$this->getTimeLastUpdated()."', module = '".$this->getModule()."', navOverride = '".$this->getNavOveride()."' WHERE page_id = '".$this->getPageId()."'");
         if($result)
         {
             return true;
@@ -239,4 +241,22 @@ class Page {
     {
         return $this->author;
     }
+
+    /**
+     * @param mixed $navOveride
+     */
+    public function setNavOveride($navOveride)
+    {
+        $this->navOveride = $navOveride;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNavOveride()
+    {
+        return $this->navOveride;
+    }
+
+
 } 

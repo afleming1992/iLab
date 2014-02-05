@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" hash="3099345706">
+    <data-source source="LOCAL" name="MySQL - @ilab Live" uuid="755cda46-263a-48fc-8999-92ee6426e635">
+      <driver-ref>mysql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://ajfleming.co.uk:3306/swfm_ilab</jdbc-url>
+      <user-name>swfm_1</user-name>
+      <user-password>dfd9dfc7dfcbdfc6dfc6dfccdfc7df9bdf93df93df98</user-password>
+      <driver-properties>
+        <property name="zeroDateTimeBehavior" value="convertToNull" />
+        <property name="tinyInt1isBit" value="false" />
+      </driver-properties>
+      <libraries />
+    </data-source>
+  </component>
+</project>
+

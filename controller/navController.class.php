@@ -28,10 +28,28 @@ class navController {
                 $section = new Section($this->getDb(),$row['section_id']);
                 if($section->getDetails())
                 {
-                    $section->getPages();
-                    if($section->getHomepage() != null)
+                    if(!$section->getRestricted() || ($section->getRestricted() && isset($_SESSION['access_level'])))
                     {
-                        $mainNav .= "<li><a href='?mode=content&id=".$section->getHomepage()->getPageId()."'>".$section->getName()."</a></li>";
+                        $section->findPages();
+                        if($section->getHomepage() != null)
+                        {
+                            $mainNav .= "<li><a href='#' class='dropdown-toggle' data-toggle='dropdown'>".$section->getName()." <b class='caret'></b></a>";
+                            $mainNav .= "<ul class='dropdown-menu'>";
+                            if(strlen($section->getHomepage()->getNavOveride()) > 0)
+                            {
+                                $mainNav .= "<li><a href='".$section->getHomepage()->getNavOveride()."'>".$section->getHomepage()->getTitle()."</a>";
+                            }
+                            else
+                            {
+                                $mainNav .= "<li><a href='?mode=content&id=".$section->getHomepage()->getPageId()."'>".$section->getHomepage()->getTitle()."</a>";
+                            }
+                            $pages = $section->getPages();
+                            foreach($pages as $page)
+                            {
+                                $mainNav .= "<li><a href='?mode=content&id=".$page->getPageId()."'>".$page->getTitle()."</a></li>";
+                            }
+                            $mainNav .= "</ul></li>";
+                        }
                     }
                 }
             }
@@ -89,6 +107,17 @@ class navController {
             exit();
         }
         return $sideNav;
+    }
+
+    public function loadPageAdmin($mode,$id)
+    {
+        $adminNav = "<ul class='nav nav-pills nav-stacked'>";
+        if($mode = "content")
+        {
+            $adminNav .= "<li><a href='?mode=create&type=page'><span class='glyphicon glyphicon-plus'></span> Create New Page</a></li><li><a href='?mode=edit&type=page&id=".$id."'><span class='glyphicon glyphicon-pencil'></span> Edit This Page</a></li>";
+        }
+
+        return $adminNav;
     }
 
     /**
