@@ -2,21 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d9d7289d-c5e1-4998-8565-3063d663b2e0" name="Default" comment="Overhalled Look of Website and begining structuring&#10;# Please enter the commit message for your changes. Lines starting&#10;# with '#' will be ignored, and an empty message aborts the commit.&#10;# On branch master&#10;# Changes to be committed:&#10;#   (use &quot;git reset HEAD &lt;file&gt;...&quot; to unstage)&#10;#&#10;#&#9;new file:   css/bootstrap.css&#10;#&#9;modified:   css/main.css&#10;#&#9;new file:   fonts/glyphicons-halflings-regular.eot&#10;#&#9;new file:   fonts/glyphicons-halflings-regular.svg&#10;#&#9;new file:   fonts/glyphicons-halflings-regular.ttf&#10;#&#9;new file:   fonts/glyphicons-halflings-regular.woff&#10;#&#9;new file:   images/background.png&#10;#&#9;new file:   images/logo.ai&#10;#&#9;new file:   images/logo.png&#10;#&#9;modified:   index.php&#10;#&#9;new file:   js/bootstrap.js&#10;#&#9;new file:   js/bootstrap.min.js&#10;#&#9;new file:   navbar.php&#10;#&#9;new file:   nbproject/private/private.xml&#10;#&#10;&#10;&#10;">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/database/db.sql" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/images/carousel1.png" afterPath="$PROJECT_DIR$/images/carousel1.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/images/test_image.jpg" afterPath="$PROJECT_DIR$/images/test_image.jpg" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/config.php" afterPath="$PROJECT_DIR$/config/config.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/content/content.php" afterPath="$PROJECT_DIR$/content/content.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controller/controller.php" afterPath="$PROJECT_DIR$/controller/controller.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/deployment.xml" afterPath="$PROJECT_DIR$/.idea/deployment.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/content/header.php" afterPath="$PROJECT_DIR$/content/header.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forms/login.php" afterPath="$PROJECT_DIR$/forms/login.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/css/main.css" afterPath="$PROJECT_DIR$/css/main.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controller/mainController.class.php" afterPath="$PROJECT_DIR$/controller/mainController.class.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controller/navController.class.php" afterPath="$PROJECT_DIR$/controller/navController.class.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/content/navbar.php" afterPath="$PROJECT_DIR$/content/navbar.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classes/page.class.php" afterPath="$PROJECT_DIR$/classes/page.class.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/db.sql" afterPath="$PROJECT_DIR$/database/db.sql" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" />
     </list>
     <ignored path="ilab.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -48,10 +35,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="header.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="header.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/content/header.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="20" selection-start="505" selection-end="505" vertical-scroll-proportion="0.23155504" vertical-offset="0" max-vertical-offset="881">
+            <state line="12" column="20" selection-start="505" selection-end="505" vertical-scroll-proportion="-7.8461537" vertical-offset="0" max-vertical-offset="646">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="db.sql" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/database/db.sql">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="319" column="0" selection-start="10305" selection-end="10305" vertical-scroll-proportion="6.0659957" vertical-offset="0" max-vertical-offset="5525">
               <folding />
             </state>
           </provider>
@@ -149,7 +145,6 @@
         <option value="$PROJECT_DIR$/content/loginSuccessful.php" />
         <option value="$PROJECT_DIR$/content/loginSuccess.php" />
         <option value="$PROJECT_DIR$/classes/user.class.php" />
-        <option value="$PROJECT_DIR$/database/db.sql" />
         <option value="$PROJECT_DIR$/config/config.php" />
         <option value="$PROJECT_DIR$/content/content.php" />
         <option value="$PROJECT_DIR$/css/main.css" />
@@ -162,6 +157,7 @@
         <option value="$PROJECT_DIR$/controller/mainController.class.php" />
         <option value="$PROJECT_DIR$/content/navbar.php" />
         <option value="$PROJECT_DIR$/content/header.php" />
+        <option value="$PROJECT_DIR$/database/db.sql" />
       </list>
     </option>
   </component>
@@ -248,61 +244,21 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="js" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ilab" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ilab" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="js" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="tinymce" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ilab" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ilab" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="js" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="tinymce" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="plugins" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ilab" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ilab" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="forms" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ilab" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ilab" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="database" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -631,7 +587,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/content/header.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="20" selection-start="505" selection-end="505" vertical-scroll-proportion="0.23155504" vertical-offset="0" max-vertical-offset="881">
+        <state line="12" column="20" selection-start="505" selection-end="505" vertical-scroll-proportion="-7.8461537" vertical-offset="0" max-vertical-offset="646">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/database/db.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="319" column="0" selection-start="10305" selection-end="10305" vertical-scroll-proportion="6.0659957" vertical-offset="0" max-vertical-offset="5525">
           <folding />
         </state>
       </provider>

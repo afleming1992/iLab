@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 04, 2014 at 06:43 PM
+-- Generation Time: Feb 05, 2014 at 02:17 AM
 -- Server version: 5.5.34
 -- PHP Version: 5.4.22
 
@@ -53,6 +53,8 @@ CREATE TABLE IF NOT EXISTS `page` (
   `restricted` int(11) NOT NULL,
   `time_last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `module` text NOT NULL,
+  `navOverride` text NOT NULL,
+  `navOrder` int(11) NOT NULL,
   PRIMARY KEY (`page_id`),
   KEY `author` (`author`),
   KEY `section` (`section`)
@@ -62,14 +64,14 @@ CREATE TABLE IF NOT EXISTS `page` (
 -- Dumping data for table `page`
 --
 
-INSERT INTO `page` (`page_id`, `section`, `section_homepage`, `author`, `title`, `content`, `restricted`, `time_last_updated`, `module`) VALUES
-(1, 2, 1, 'andrew', 'What we do', 'Testing 123', 0, '0000-00-00 00:00:00', ''),
-(2, 3, 1, 'andrew', 'Research', 'Research Test', 0, '0000-00-00 00:00:00', ''),
-(3, 4, 1, 'andrew', 'Publications', 'Publications Test', 0, '0000-00-00 00:00:00', ''),
-(4, 5, 1, 'andrew', 'Intranet Home', 'Intranet Test', 1, '0000-00-00 00:00:00', ''),
-(5, 2, 0, 'andrew', 'Who we are', 'Who we are Content', 0, '2014-02-02 16:26:59', ''),
-(6, 2, 0, 'andrew', 'Current Collaborations', 'Collaborations Content', 0, '2014-02-02 16:27:44', ''),
-(7, 6, 1, 'andrew', 'News Home', 'News Home Content', 0, '2014-02-02 20:57:11', '');
+INSERT INTO `page` (`page_id`, `section`, `section_homepage`, `author`, `title`, `content`, `restricted`, `time_last_updated`, `module`, `navOverride`, `navOrder`) VALUES
+(1, 2, 1, 'andrew', 'What we do', 'Testing 123', 0, '0000-00-00 00:00:00', '', '', 0),
+(2, 3, 1, 'andrew', 'Research', 'Research Test', 0, '0000-00-00 00:00:00', '', '', 0),
+(3, 4, 1, 'andrew', 'Publications', 'Publications Test', 0, '0000-00-00 00:00:00', '', '', 0),
+(4, 5, 1, 'andrew', 'Intranet Home', 'Intranet Test', 1, '0000-00-00 00:00:00', '', '', 0),
+(5, 2, 0, 'andrew', 'Who we are', 'Who we are Content', 0, '2014-02-02 16:26:59', '', '', 0),
+(6, 2, 0, 'andrew', 'Current Collaborations', 'Collaborations Content', 0, '2014-02-02 16:27:44', '', '', 0),
+(7, 6, 1, 'andrew', 'News Home', 'News Home Content', 0, '2014-02-02 20:57:11', '', '', 0);
 
 -- --------------------------------------------------------
 
@@ -99,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
 --
 
 INSERT INTO `profile` (`profileId`, `username`, `real_name`, `email`, `website`, `bio`, `pure_id`, `linkedin`, `twitter`, `scholar`, `photo`, `role`) VALUES
-(1, 'andrew', 'Andrew Fleming', 'ajf9@hw.ac.uk', 'ajfleming.co.uk', 'Student studying Computer Science at Heriot-Watt University', '', 'http://www.linkedin.com/profile/view?id=201059312', '@afleming', '', '', 'Web Developer');
+(1, 'andrew', 'Andrew Fleming', 'ajf9@hw.ac.uk', 'ajfleming.co.uk', 'Student studying Computer Science at Heriot-Watt University', '', 'http://www.linkedin.com/profile/view?id=201059312', '@afleming', '', 'ajf9.jpg', 'Web Developer');
 
 -- --------------------------------------------------------
 
