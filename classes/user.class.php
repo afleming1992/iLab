@@ -16,7 +16,7 @@ class user {
     private $salt;
     private $profile;
 
-    public function __construct($db,$username,$password)
+    public function __construct($db,$username)
     {
         $this->setDb($db);
         $this->setUsername($username);
@@ -64,7 +64,7 @@ class user {
 
     public function checkPassword()
     {
-        $result = $this->db->query("SELECT * FROM user where username = '". $this->username ."'");
+        $result = $this->db->query("SELECT * FROM user where username = '". $this->getUsername() ."'");
         if($data = $result->fetch())
         {
             //We get our Salt from the Database (As it's Randomly Generated for each user and when they change their Password)
@@ -85,6 +85,22 @@ class user {
         {
             return false;
         }
+    }
+
+    public function getUser()
+    {
+        $result = $this->db->query("SELECT * FROM user WHERE username = '".$this->getUsername()."'");
+        if($data = $result->fetch())
+        {
+            $this->setAccessLevel($data['access_level']);
+            $this->setHidden($data['hidden']);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
     }
 
     public function updatePassword($newPassword)

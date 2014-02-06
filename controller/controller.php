@@ -18,6 +18,17 @@
         $loggedout = 1;
     }
 
+    //Form Handling
+    if(isset($_POST['createPage']))
+    {
+        $app->createNewPage($_POST['page_title'],$_POST['page_section'],$_POST['page_content'],$_POST['page_module'],$_POST['page_restricted']);
+    }
+
+    if(isset($_POST['editPage']))
+    {
+        $app->editPage($_POST['page_id'],$_POST['page_title'],$_POST['page_section'],$_POST['page_content'],$_POST['page_module'],$_POST['page_restricted']);
+    }
+
     if(isset($_GET['mode']))
     {
         $mode = $_GET['mode'];
@@ -33,14 +44,7 @@
             //Login Mode
             if(isset($_POST['login']))
             {
-                if(isset($_POST['bounce']))
-                {
-                    $app->login($_POST['login_username'],$_POST['login_password'],$_POST['mode'],$_POST['id']);
-                }
-                else
-                {
-                    $app->login($_POST['login_username'],$_POST['login_password']);
-                }
+                $app->login($_POST['login_username'],$_POST['login_password']);
             }
             else
             {
@@ -65,9 +69,19 @@
         else if(strcmp($mode,"edit") == 0)
         {
             //Edit Mode
-            if(isset($_GET['id']))
+            if(isset($_GET['type']))
             {
-
+                if(strcmp($_GET['type'],"page") == 0)
+                {
+                    if(isset($_GET['id']))
+                    {
+                        $app->loadEditPage($_GET['id']);
+                    }
+                    else
+                    {
+                        $app->pageNotFound();
+                    }
+                }
             }
             else
             {

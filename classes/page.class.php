@@ -19,11 +19,28 @@ class Page {
     private $time_last_updated;
     private $module;
     private $navOveride;
+    private $navOrder;
 
     public function __construct($db,$pageId)
     {
         $this->setDB($db);
         $this->setPageId($pageId);
+    }
+
+    public function createPage()
+    {
+        $query = "INSERT INTO page (section,author,title,content,restricted,module,navOrder) VALUES ('".$this->getSection()->getSectionId()."','".$this->getAuthor()->getUsername()."','".$this->getTitle()."','".$this->getContent()."','".$this->getRestricted()."','".$this->getModule()."','".$this->getNavOrder()."')";
+        $result = $this->db->query($query);
+        if($result)
+        {
+            $id = $this->getDb()->getDb()->lastInsertId();
+            $this->setPageId($id);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public function getPageDetails()
@@ -44,6 +61,7 @@ class Page {
             $this->setTimeLastUpdated($data['time_last_updated']);
             $this->setModule($data['module']);
             $this->setNavOveride($data['navOverride']);
+            $this->setNavOrder($data['navOrder']);
             return true;
         }
         else
@@ -54,7 +72,8 @@ class Page {
 
     public function updatePage()
     {
-        $result = $this->db->exec("UPDATE ".$this->db->getPrefix()."page SET section = '".$this->getSection()->getSectionId()."', author = '".$this->getAuthor()->getUsername()."', title = '".$this->getTitle()."', content = '".$this->getContent()."', restricted = '".$this->getRestricted()."', time_last_updated = '".$this->getTimeLastUpdated()."', module = '".$this->getModule()."', navOverride = '".$this->getNavOveride()."' WHERE page_id = '".$this->getPageId()."'");
+        $query = "UPDATE ".$this->db->getPrefix()."page SET section = '".$this->getSection()->getSectionId()."', author = '".$this->getAuthor()->getUsername()."', title = '".$this->getTitle()."', content = '".$this->getContent()."', restricted = '".$this->getRestricted()."', module = '".$this->getModule()."', navOrder = '".$this->getNavOrder()."' WHERE page_id = '".$this->getPageId()."'";
+        $result = $this->db->query($query);
         if($result)
         {
             return true;
@@ -257,6 +276,23 @@ class Page {
     {
         return $this->navOveride;
     }
+
+    /**
+     * @param mixed $navOrder
+     */
+    public function setNavOrder($navOrder)
+    {
+        $this->navOrder = $navOrder;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNavOrder()
+    {
+        return $this->navOrder;
+    }
+
 
 
 } 

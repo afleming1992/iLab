@@ -9,6 +9,12 @@
                 <br />
                 <a class="btn btn-primary">Go to my Profile</a>
                 <?php
+                    if($_POST['bounce'] == 1)
+                    {
+                        ?>
+                            <a href='?mode=<?php echo $_POST['mode']; ?>&id=<?php echo $_POST['id']?>' class="btn btn-warning">Let me get back to what I was doing...</a>
+                        <?php
+                    }
                     if($_SESSION['access_level'] == 2)
                     {
                         ?>

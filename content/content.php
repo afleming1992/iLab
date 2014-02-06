@@ -40,7 +40,20 @@
                     </h1>
                 </div>
                 <div class="panel-body">
-                    <?php echo $page->getContent(); ?>
+                    <?php
+                        echo html_entity_decode($page->getContent(),ENT_QUOTES);
+                        if(strlen($page->getModule()) > 0)
+                        {
+                            if(is_file("module/".$page->getModule()))
+                            {
+                                include('module/'.$page->getModule());
+                            }
+                            else if($_SESSION['access_level'] == 2)
+                            {
+                                print("<div class='alert alert-danger><h2>Specified Module could not be found</h2>Please investigate!</div>");
+                            }
+                        }
+                    ?>
                 </div>
                 <div class="panel-footer">
                     <small>Created by: <a href='#'><?php echo $page->getAuthor()->getRealName(); ?></a> | Last Updated:- <?php echo $page->getTimeLastUpdated(); ?></small>
