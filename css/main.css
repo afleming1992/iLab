@@ -14,6 +14,19 @@ body
     font-size:12px;
 }
 
+.crop {
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+}
+
+.crop img
+{
+    width:50px;
+    height:50px;
+    overflow:hidden;
+}
+
 #contentTitle
 {
     font-size:25px;
@@ -32,6 +45,13 @@ body
 .nav-pills
 {
     font-size:15px;
+}
+
+.nav > li.disabled.nav-header > a {
+    cursor: default;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
 .mainnav .navbar-brand {

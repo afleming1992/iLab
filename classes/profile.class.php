@@ -31,7 +31,7 @@ class profile
     public function createProfile()
     {
         //This function will only be called by the User Class to prevent multiple profiles being created for one user.
-        $result = $this->db->exec("INSERT INTO ".$this->db->getPrefix()."profile (username) VALUES ('$this->getUsername()')");
+        $result = $this->db->exec("INSERT INTO ".$this->db->getPrefix()."profile (username,real_name,email,website,bio,pure_id,linkedin,twitter,scholar,photo,role) VALUES ('".$this->getUsername()."','".$this->getRealName()."','".$this->getEmail()."','".$this->getWebsite()."','".$this->getBio()."','".$this->getPureId()."','".$this->getLinkedIn()."','".$this->getTwitter()."','".$this->getScholar()."','".$this->getPhoto()."','".$this->getRole()."')");
         if($result)
         {
             return true;
@@ -57,6 +57,8 @@ class profile
             $this->setScholar($data['scholar']);
             $this->setPhoto($data['photo']);
             $this->setRole($data['role']);
+            $this->setPureId($data['pure_id']);
+            $this->setLinkedIn($data['linkedin']);
             return true;
         }
         else
@@ -67,7 +69,7 @@ class profile
 
     public function updateProfile()
     {
-        $result = $this->db->exec("UPDATE ".$this->db->getPrefix()."profile SET real_name = '$this->getRealName()', email = '$this->getEmail()', website = '$this->getWebsite()', bio = '$this->getBio()', pure_id = '$this->getPureId()', linkedin = '$this->getLinkedin()', twitter = '$this->getTwitter()', scholar = '$this->getScholar()', photo = '$this->getPhoto()', role = '$this->getRole()' WHERE username = '$this->getUsername()'");
+        $result = $this->db->query("UPDATE ".$this->db->getPrefix()."profile SET real_name = '".$this->getRealName()."', email = '".$this->getEmail()."', website = '".$this->getWebsite()."', bio = '".$this->getBio()."', pure_id = '".$this->getPureId()."', linkedin = '".$this->getLinkedin()."', twitter = '".$this->getTwitter()."', scholar = '".$this->getScholar()."', photo = '".$this->getPhoto()."', role = '".$this->getRole()."' WHERE username = '".$this->getUsername()."'");
         if($result)
         {
             return true;

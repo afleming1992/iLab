@@ -25,6 +25,12 @@
     <script src="js/jquery.min.js" ></script>
     <script src="js/bootstrap.js" /></script>
     <div class='wrapper'>
+        <?php
+            if(isset($message))
+            {
+                echo $message;
+            }
+        ?>
         <header>
             <?php
                 include('navbar.php');

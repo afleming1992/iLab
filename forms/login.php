@@ -13,8 +13,7 @@
         {
     ?>
     <input type="hidden" name="bounce" value="1" />
-    <input type="hidden" name="mode" value="<?php echo $_GET['mode']; ?>" />
-    <input type="hidden" name="id" value="<?php echo $_GET['id']; ?>" />
+    <input type="hidden" name="returnurl" value="<?php echo $_SERVER['QUERY_STRING']; ?>" />
     <?php
         }
     ?>

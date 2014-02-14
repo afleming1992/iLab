@@ -57,6 +57,25 @@ class mainController
         $this->loadFooter();
     }
 
+    public function loadAdminPage($action,$data = NULL)
+    {
+        $this->loadPageHeader();
+        if($this->checkLoginandAccess(2))
+        {
+            if($action == "userList")
+            {
+                $users = array();
+                $users = $this->getAllUsers($action);
+            }
+            else if($action == "editUser")
+            {
+                $user = $data;
+            }
+            include('content/adminContent.php');
+        }
+        $this->loadFooter();
+    }
+
     public function loadEditPage($id)
     {
         $page = new Page($this->getDb(),$id);
@@ -125,6 +144,99 @@ class mainController
         }
     }
 
+    public function createUser($username,$realname,$email,$access,$password,$hidden)
+    {
+        $user = new User($this->getDb(),$username);
+        $user->getProfile()->setRealName($realname);
+        $user->getProfile()->setEmail($email);
+        $user->setAccessLevel($access);
+        $user->setPassword($password);
+        $user->setHidden($hidden);
+        if($user->createUser())
+        {
+            $this->loadUpdateStatus("<div class='alert alert-success'><h3>$username has been created successfully</h3></div><a class='btn btn-primary' href='?mode=admin&action=userList'>Go to User List</a>");
+        }
+        else
+        {
+            $this->loadUpdateStatus("<div class='alert alert-danger'><h3>Oh Dear! The user wasn't created!</h3></div>");
+        }
+    }
+
+    public function editUser($admin,$username,$realname,$email,$access,$newpassword,$password,$hidden,$role,$website,$bio,$pureId,$twitter,$scholar,$linkedin,$newphoto,$photolink)
+    {
+        if($newphoto == "yes")
+        {
+            $allowedExts = array("gif", "jpeg", "jpg", "png");
+            $temp = explode(".", $_FILES["profile_photo"]["name"]);
+            $extension = end($temp);
+            if (($_FILES["profile_photo"]["size"] < 1000000)
+                && in_array($extension, $allowedExts))
+            {
+                if ($_FILES["profile_photo"]["error"] > 0)
+                {
+                    echo "Return Code: " . $_FILES["profile_photo"]["error"] . "<br>";
+                }
+                else
+                {
+                    //echo "Upload: " . $_FILES["profile_photo"]["name"] . "<br>";
+                    //echo "Type: " . $_FILES["profile_photo"]["type"] . "<br>";
+                    //echo "Size: " . ($_FILES["profile_photo"]["size"] / 1024) . " kB<br>";
+                    //echo "Temp file: " . $_FILES["profile_photo"]["tmp_name"] . "<br>";
+
+
+                        move_uploaded_file($_FILES["profile_photo"]["tmp_name"],
+                                           "images/profile/" . $username .".". $extension);
+                        $photolink = $username.".".$extension;
+                }
+            }
+            else
+            {
+                echo "Invalid file";
+            }
+        }
+        $user = new User($this->getDb(),$username);
+        $user->getUser();
+        $user->getProfile()->getProfile();
+
+        $user->getProfile()->setRealName($realname);
+        $user->getProfile()->setEmail($email);
+        $user->getProfile()->setRole($role);
+        $user->getProfile()->setWebsite($website);
+        $user->getProfile()->setBio(htmlspecialchars($bio,ENT_QUOTES));
+        $user->getProfile()->setPureId($pureId);
+        $user->getProfile()->setTwitter($twitter);
+        $user->getProfile()->setScholar($scholar);
+        $user->getProfile()->setLinkedIn($linkedin);
+
+        if($newphoto == "yes")
+        {
+            $user->getProfile()->setPhoto($photolink);
+        }
+
+        if($admin == 1)
+        {
+            $user->setAccessLevel($access);
+            $user->setHidden($hidden);
+        }
+
+        if($newpassword == "yes")
+        {
+            $user->updatePassword($password);
+        }
+
+        if($user->updateUser())
+        {
+            if($admin == 1)
+            {
+                $this->loadAdminPage("userList");
+            }
+            else
+            {
+                $this->loadUpdateStatus("<div class='alert alert-success'>Your Account has been updated!</div>");
+            }
+        }
+    }
+
     public function redirect($url)
     {
         ?>
@@ -132,6 +244,14 @@ class mainController
                 window.location = "index.php<?php echo $url; ?>"
             </script>
         <?php
+    }
+
+    public function loadUpdateStatus($message)
+    {
+        $this->loadPageHeader();
+        include('content/creationSuccess.php');
+        $this->loadFooter();
+        exit();
     }
 
     public function loadContentPage($id)
@@ -168,6 +288,34 @@ class mainController
             include("forms/editPage.php");
         }
         $this->loadFooter();
+    }
+
+    public function loadCreateUser()
+    {
+        $this->loadPageHeader();
+        if($this->checkLoginandAccess(2))
+        {
+            include("forms/addUser.php");
+        }
+        $this->loadFooter();
+    }
+
+    public function loadEditUser($mode,$username)
+    {
+        if($mode == "admin")
+        {
+            $user = new User($this->getDb(),$username);
+            $user->getUser();
+            $user->getProfile()->getProfile();
+            $this->loadAdminPage("editUser",$user);
+        }
+        else
+        {
+            $user = new User($this->getDb(),$username);
+            $this->loadPageHeader();
+            include("forms/editUser.php");
+            $this->loadFooter();
+        }
     }
 
     public function getAllSections($id)
@@ -249,6 +397,19 @@ class mainController
         $this->loadFooter();
     }
 
+    public function getAllUsers()
+    {
+        $result = $this->getDb()->query("SELECT * FROM user");
+        $users = array();
+        while($data = $result->fetch())
+        {
+            $user = new User($this->getDb(),$data['username']);
+            $user->getUser();
+            $user->getProfile()->getProfile();
+            $users[] = $user;
+        }
+        return $users;
+    }
     /**
      * @param mixed $db
      */

@@ -26,7 +26,23 @@
 
     if(isset($_POST['editPage']))
     {
-        $app->editPage($_POST['page_id'],$_POST['page_title'],$_POST['page_section'],$_POST['page_content'],$_POST['page_module'],$_POST['page_restricted']);
+        $message = $app->editPage($_POST['page_id'],$_POST['page_title'],$_POST['page_section'],$_POST['page_content'],$_POST['page_module'],$_POST['page_restricted']);
+    }
+
+    if(isset($_POST['addUser']))
+    {
+        $message = $app->createUser($_POST['user_username'],$_POST['user_realname'],$_POST['user_email'],$_POST['user_access'],$_POST['user_password1'],$_POST['user_hidden'],$_POST['']);
+    }
+
+    if(isset($_POST['editUser']))
+    {
+        $admin = 0;
+        if(isset($_POST['admin']))
+        {
+            $admin = 1;
+        }
+        $app->editUser($admin,$_POST['username'],$_POST['profile_realname'],$_POST['profile_email'],$_POST['access_level'],$_POST['choose_password'],$_POST['new_password1'],$_POST['user_hidden'],$_POST['profile_role'],$_POST['profile_website'],$_POST['profile_bio'],$_POST['profile_pure'],$_POST['profile_twitter'],$_POST['profile_scholar'],$_POST['profile_linkedin'],$_POST['new_photo'],$_POST['profile_photo']);
+        exit();
     }
 
     if(isset($_GET['mode']))
@@ -82,10 +98,28 @@
                         $app->pageNotFound();
                     }
                 }
+                else
+                {
+                    if(strcmp($_GET['type'],"user") == 0)
+                    {
+                        $app->loadEditUser(NULL,$_SESSION['username']);
+                    }
+                }
             }
             else
             {
                 $app->pageNotFound();
+            }
+        }
+        else if(strcmp($mode,"admin") == 0)
+        {
+            if($_GET['action'] == "editUser")
+            {
+              $app->loadEditUser($_GET['mode'],$_GET['id']);
+            }
+            else
+            {
+                $app->loadAdminPage($_GET['action']);
             }
         }
         else

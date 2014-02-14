@@ -31,7 +31,7 @@
                             $photo = 'images/profile/'.$user->getPhoto();
                         }
                     ?>
-                    <img src="<?php echo $photo ?>" class="img-thumbnail" width="50px" height="50px" style="margin:0" /> <span class="caret"></span>
+                    <img src="<?php if(file_exists($photo)){ echo $photo; }else{ echo "images/test-profile.jpg";} ?>" class="crop img-thumbnail" width="50px" height="50px" style="margin:0" /> <span class="caret"></span>
                 </button>
                     <ul class="dropdown-menu" role="menu">
                         <li role="presentation" class="dropdown-header">Quick Access</li>
@@ -43,7 +43,7 @@
                             {
                         ?>
                         <li role="presentation" class="dropdown-header">Administration</li>
-                        <li><a href="#">Go to Admin</a></li>
+                        <li><a href="?mode=admin">Go to Admin</a></li>
                         <li class="divider"></li>
                         <?php
                             }

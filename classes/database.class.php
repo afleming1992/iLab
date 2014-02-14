@@ -27,13 +27,31 @@ class Database
 
     public function query($statement)
     {
-        $result=$this->db->query($statement);
-        return $result;
+        if($result=$this->db->query($statement))
+        {
+            return $result;
+        }
+        else
+        {
+            $error = $this->getDb()->errorInfo();
+            print("DATABASE ERROR:".$error[2]);
+            return false;
+        }
     }
 
     public function exec($statement)
     {
-        $this->db->exec($statement);
+        if($this->db->exec($statement) > 0)
+        {
+            return true;
+        }
+        else
+        {
+            print($statement);
+            $error = $this->getDb()->errorInfo();
+            print("DATABASE ERROR:".$error[2]);
+            return false;
+        }
     }
 
     public function getPrefix()

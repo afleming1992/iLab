@@ -12,13 +12,13 @@
                     if($_POST['bounce'] == 1)
                     {
                         ?>
-                            <a href='?mode=<?php echo $_POST['mode']; ?>&id=<?php echo $_POST['id']?>' class="btn btn-warning">Let me get back to what I was doing...</a>
+                            <a href='?<?php echo $_POST['returnurl']; ?>' class="btn btn-warning">Let me get back to what I was doing...</a>
                         <?php
                     }
                     if($_SESSION['access_level'] == 2)
                     {
                         ?>
-                            <a class="btn btn-primary">Go to Administration</a>
+                            <a href='?mode=admin' class="btn btn-primary">Go to Administration</a>
                         <?php
                     }
                 ?>

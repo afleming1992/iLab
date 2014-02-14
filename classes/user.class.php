@@ -20,7 +20,6 @@ class user {
     {
         $this->setDb($db);
         $this->setUsername($username);
-        $this->setPassword($password);
         $this->setProfile(new Profile($this->db,$this->username));
     }
 
@@ -28,7 +27,7 @@ class user {
     {
         $this->setNewSalt();
         $this->setPassword(md5($this->getSalt()."".$this->getPassword()));
-        $result = $this->db->exec("INSERT INTO ".$this->db->getPrefix()."user (username,password,access_level,hidden) VALUES ('$this->getUsername()','$this->getRealName()','$this->getPassword()','$this->getAccessLevel()','$this->getHidden()','$this->getSalt()')");
+        $result = $this->db->query("INSERT INTO ".$this->db->getPrefix()."user (username,password,access_level,hidden,salt) VALUES ('".$this->getUsername()."','".$this->getPassword()."','".$this->getAccessLevel()."','".$this->getHidden()."','".$this->getSalt()."')");
         if($result)
         {
             $result = $this->getProfile()->createProfile();
@@ -39,7 +38,7 @@ class user {
             else
             {
                 //Roll Back
-                $this->db->exec("DELETE FROM ".$this->db->getPrefix()."user WHERE username = '$this->getUsername'");
+                $this->db->query("DELETE FROM ".$this->db->getPrefix()."user WHERE username = '$this->getUsername'");
             }
         }
         else
@@ -50,16 +49,41 @@ class user {
 
     public function updateUser()
     {
-        $result = $this->db->exec("UPDATE ".$this->db->getPrefix()."user SET password = '$this->getPassword()', access_level = '$this->getPassword()', hidden = '$this->getHidden()', salt = '$this->getSalt()' WHERE username = '$this->getUsername()' ");
+        $result = $this->db->query("UPDATE user SET password = '".$this->getPassword()."', hidden = '".$this->getHidden()."', salt = '".$this->getSalt()."', access_level = '".$this->getAccessLevel()."';");
         if($result)
         {
-            return true;
+            $result = $this->getProfile()->updateProfile();
+            if($result)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         else
         {
             return false;
         }
 
+    }
+
+    public function deleteUser()
+    {
+        $result = $this->db->query("DELETE FROM profile WHERE username = '".$this->getUsername()."'");
+        if($result)
+        {
+            $result = $this->db->query("DELETE FROM user WHERE username = '".$this->getUsername()."'");
+            if($result)
+            {
+                return true;
+            }
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public function checkPassword()
@@ -92,8 +116,10 @@ class user {
         $result = $this->db->query("SELECT * FROM user WHERE username = '".$this->getUsername()."'");
         if($data = $result->fetch())
         {
+            $this->setSalt($data['salt']);
             $this->setAccessLevel($data['access_level']);
             $this->setHidden($data['hidden']);
+            $this->setPassword($data['password']);
             return true;
         }
         else
@@ -200,7 +226,13 @@ class user {
 
     public function setNewSalt()
     {
-        $this->salt = mycrypt_create_iv(32);
+        $length = 32;
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, strlen($characters) - 1)];
+        }
+        $this->setSalt($randomString);
     }
 
     /**
