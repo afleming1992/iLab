@@ -20,10 +20,13 @@
            relative_urls: false
         });
     </script>
+    <link rel="stylesheet" href="jquery-ui/css/flick/jquery-ui.custom.css" />
+
 </head>
 <body>
     <script src="js/jquery.min.js" ></script>
     <script src="js/bootstrap.js" /></script>
+    <script src="jquery-ui/js/jquery-ui.custom.min.js"></script>
     <div class='wrapper'>
         <?php
             if(isset($message))

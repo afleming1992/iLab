@@ -16,6 +16,7 @@ class Project {
     private $website;
     private $startDate;
     private $endDate;
+    private $logo;
 
     private $sponsors;
     private $partners;
@@ -24,24 +25,51 @@ class Project {
 
     public function __construct($db,$id)
     {
-        $contributors = array();
-        $sponsors = array();
         $this->setDb($db);
         $this->setId($id);
     }
 
-    public function getProject()
+    public function createProject()
     {
-        $result = $this->getDb()->query("SELECT * FROM project WHERE project_Id = '".$this->getId()."'");
+        $result = $this->getDb->query("INSERT INTO project (name,description,website,startDate,endDate) VALUES ('".$this->getName()."','".$this->getDescription()."','".$this->getWebsite()."','".$this->getStartDate()."','".$this->getEndDate()."'");
         if($result)
         {
-            $data = $result->fetch();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function updateProject()
+    {
+        $result = $this->getDb()->query("UPDATE project SET name = '".$this->getName()."',description = '".$this->getDescription()."', website = '".$this->getWebsite()."', startDate = '".$this->getStartDate()."', endDate = '".$this->getEndDate()."', logo = '".$this->getLogo()."' WHERE projectId = '".$this->getId()."'");
+        if($result)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function getProject()
+    {
+        $result = $this->getDb()->query("SELECT * FROM project WHERE projectId = '".$this->getId()."'");
+        if($data = $result->fetch())
+        {
             $this->setName($data['name']);
             $this->setDescription($data['description']);
             $this->setWebsite($data['website']);
             $this->setStartDate($data['startDate']);
             $this->setEndDate($data['endDate']);
+            $this->setLogo($data['logo']);
             $this->setContributors($this->findContributors());
+            $this->findPartners();
+            $this->findSponsors();
+            return true;
         }
         else
         {
@@ -58,13 +86,52 @@ class Project {
             while($data = $result->fetch())
             {
                 $contributor = array();
-                $contributor[] = new User($this->getDb(),$data['username']);
-                $contributor[] = $data['admin'];
-                $contributor[] = $data['hidden'];
+                $contributor["user"] = new User($this->getDb(),$data['username']);
+                $contributor["user"]->getProfile()->getProfile();
+                $contributor["admin"] = $data['admin'];
+                $contributor["hidden"] = $data['hidden'];
                 $contributors[] = $contributor;
             }
         }
         return $contributors;
+    }
+
+    public function checkIfAdmin($username)
+    {
+        $contributors = $this->getContributors();
+        foreach($contributors as $contributor)
+        {
+            if(strcmp($username,$contributor['user']->getUsername()) == 0 && $contributor['admin'] == 1)
+            {
+                return true;
+            }
+        }
+        return false; //Subject not Found
+    }
+
+    public function findSponsorsAndPartners()
+    {
+        $sponsors = array();
+        $result = $this->getDb()->query("SELECT * FROM project_sponsor WHERE projectId = '".$this->getId()."'");
+        if($result)
+        {
+            while($data = $result->fetch())
+            {
+                $sponsor = array();
+                $sponsor["sponsor"] = new Sponsor($this->getDb(),$data['sponsorId']);
+                $sponsor["sponsor"]->getSponsor();
+                if($data['type'] == "sponsor")
+                {
+                    $sponsor['type'] = "sponsor";
+                }
+                else
+                {
+                    $sponsor['type'] = "partner";
+                }
+                $sponsors[] = $sponsor;
+            }
+        }
+        return $sponsors;
     }
 
     public function findSponsors()
@@ -75,14 +142,28 @@ class Project {
         {
             while($data = $result->fetch())
             {
+                    $sponsor = new Sponsor($this->getDb(),$data['sponsorId']);
 
+                    $sponsors[] = $sponsor;
             }
         }
+        $this->setSponsors($sponsors);
     }
 
     public function findPartners()
     {
-
+        $partners = array();
+        $result = $this->getDb()->query("SELECT * FROM project_sponsor WHERE projectId = '".$this->getId()."' AND type = 'partner'");
+        if($result)
+        {
+            while($data = $result->fetch())
+            {
+                $partner = new Sponsor($this->getDb(),$data['sponsorId']);
+                $partner->getSponsor();
+                $partners[] = $partner;
+            }
+        }
+        $this->setPartners($partners);
     }
 
     /**
@@ -165,12 +246,9 @@ class Project {
         return $this->name;
     }
 
-    /**
-     * @param mixed $staff
-     */
-    public function setContributors($staff)
+    public function setContributors($contributors)
     {
-        $this->staff = $staff;
+        $this->contributors = $contributors;
     }
 
     /**
@@ -178,7 +256,7 @@ class Project {
      */
     public function getContributors()
     {
-        return $this->staff;
+        return $this->contributors;
     }
 
     /**
@@ -205,12 +283,21 @@ class Project {
         $this->startDate = $startDate;
     }
 
-    /**
-     * @return mixed
-     */
     public function getStartDate()
     {
         return $this->startDate;
+    }
+
+    public function sqlToNormal($date)
+    {
+        $date = explode("-",$date);
+        return $date[2]."/".$date[1]."/".$date[0];
+    }
+
+    public function normalToSql($date)
+    {
+        $date = explode("/",$date);
+        return $date[2]."-".$date[1]."-".$date[0];
     }
 
     /**
@@ -229,5 +316,48 @@ class Project {
         return $this->website;
     }
 
+    /**
+     * @param mixed $partners
+     */
+    public function setPartners($partners)
+    {
+        $this->partners = $partners;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getPartners()
+    {
+        return $this->partners;
+    }
+
+    /**
+     * @param mixed $logo
+     */
+    public function setLogo($logo)
+    {
+        $this->logo = $logo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLogo()
+    {
+        return $this->logo;
+    }
+
+    public function getFullLogo()
+    {
+        $file = "images/project/".$this->logo;
+        if(file_exists($file))
+        {
+            return $file;
+        }
+        else
+        {
+            return "images/test-project.jpg";
+        }
+    }
 } 

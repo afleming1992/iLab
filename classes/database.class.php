@@ -34,6 +34,7 @@ class Database
         else
         {
             $error = $this->getDb()->errorInfo();
+            print($statement."<br />");
             print("DATABASE ERROR:".$error[2]);
             return false;
         }

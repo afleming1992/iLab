@@ -34,6 +34,32 @@ class Sponsor
         }
     }
 
+    public function addLink($projectId,$type)
+    {
+        $result = $this->getDb()->query("INSERT INTO project_sponsor (projectId,sponsorId,type) VALUES ('$projectId','".$this->getId()."','$type')");
+        if($result)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function removeLink($projectId)
+    {
+        $result = $this->getDb()->query("DELETE FROM project_sponsor WHERE projectId = '$projectId' AND sponsorId = '".$this->getId()."'");
+        if($result)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public function getSponsor()
     {
         $result = $this->getDb()->query("SELECT * FROM sponsor WHERE sponsorId = '".$this->getId()."'");
@@ -54,6 +80,19 @@ class Sponsor
     public function updateSponsor()
     {
         $result = $this->getDb()->query("UPDATE sponsor SET name='".$this->getName()."', logo = '".$this->getLogo()."', website = '".$this->getWebsite()."' WHERE sponsorId = '".$this->getId()."'");
+        if($result)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function deleteSponsor()
+    {
+        $result = $this->getDb()->query("DELETE FROM sponsor WHERE sponsor_id = '".$this->getId()."'");
         if($result)
         {
             return true;
@@ -94,6 +133,11 @@ class Sponsor
     public function getLogo()
     {
         return $this->logo;
+    }
+
+    public function getFullLogo()
+    {
+        return "images/sponsor/".$this->logo;
     }
 
     /**

@@ -272,5 +272,18 @@ class profile
         return $this->website;
     }
 
+    public function getFullPhoto()
+    {
+        $file = "images/profile/".$this->photo;
+        if(file_exists($file))
+        {
+            return $file;
+        }
+        else
+        {
+            return "images/test-profile.jpg";
+        }
+    }
+
 
 } 

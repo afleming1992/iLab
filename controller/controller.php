@@ -45,6 +45,12 @@
         exit();
     }
 
+    if(isset($_POST['editProject']))
+    {
+        $app->editProject($_POST['project_id'],$_POST['project_name'],$_POST['project_description'],$_POST['project_startDate'],$_POST['project_endDate'],$_POST['project_website'],$_POST['new_logo']);
+        exit();
+    }
+
     if(isset($_GET['mode']))
     {
         $mode = $_GET['mode'];
@@ -54,6 +60,40 @@
             //View Standard Content Page Mode
             $app->loadContentPage($_GET['id']);
             exit();
+        }
+        if(strcmp($mode,"project") == 0)
+        {
+            if(isset($_GET['id']))
+            {
+                $app->loadProjectPage($_GET['id']);
+            }
+            else
+            {
+                if(isset($_GET['past']))
+                {
+                    $past = 1;
+                }
+                else
+                {
+                    $past = 0;
+                }
+                $app->loadProjectList($past);
+            }
+            exit();
+        }
+        else if(strcmp($mode,"manage") == 0)
+        {
+            if(isset($_GET['type']))
+            {
+                if(strcmp($_GET['type'],"sponsor") == 0)
+                {
+                    $app->loadSponsorsList($_GET['id']);
+                }
+            }
+            else
+            {
+                $app->pageNotFound();
+            }
         }
         else if(strcmp($mode,"login") == 0)
         {
@@ -98,12 +138,13 @@
                         $app->pageNotFound();
                     }
                 }
-                else
+                else if(strcmp($_GET['type'],"user") == 0)
                 {
-                    if(strcmp($_GET['type'],"user") == 0)
-                    {
-                        $app->loadEditUser(NULL,$_SESSION['username']);
-                    }
+                    $app->loadEditUser(NULL,$_SESSION['username']);
+                }
+                else if(strcmp($_GET['type'],"project") == 0)
+                {
+                    $app->loadEditProject($_GET['id']);
                 }
             }
             else

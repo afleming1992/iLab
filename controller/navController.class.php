@@ -46,7 +46,14 @@ class navController {
                             $pages = $section->getPages();
                             foreach($pages as $page)
                             {
-                                $mainNav .= "<li><a href='?mode=content&id=".$page->getPageId()."'>".$page->getTitle()."</a></li>";
+                                if(strlen($page->getNavOveride()) > 0)
+                                {
+                                    $mainNav .= "<li><a href='".$page->getNavOveride()."'>".$page->getTitle()."</a></li>";
+                                }
+                                else
+                                {
+                                    $mainNav .= "<li><a href='?mode=content&id=".$page->getPageId()."'>".$page->getTitle()."</a></li>";
+                                }
                             }
                             $mainNav .= "</ul></li>";
                         }
@@ -74,8 +81,17 @@ class navController {
                 {
                     $sideNav .= "<li>";
                 }
-                $sideNav .= "<a href='?mode=content&id=".$section->getHomepage()->getPageId()."'";
-                $sideNav .= ">".$section->getHomepage()->getTitle()."</a></li>";
+
+                if(strlen($section->getHomePage()->getNavOveride()) > 0)
+                {
+                    $sideNav .= "<a href='".$section->getHomepage()->getNavOveride()."'";
+                    $sideNav .= ">".$section->getHomepage()->getTitle()."</a></li>";
+                }
+                else
+                {
+                    $sideNav .= "<a href='?mode=content&id=".$section->getHomepage()->getPageId()."'";
+                    $sideNav .= ">".$section->getHomepage()->getTitle()."</a></li>";
+                }
             }
             else
             {
@@ -96,7 +112,15 @@ class navController {
                 {
                     $activeNav = "<li>";
                 }
-                $sideNav .= $activeNav."<a href='?mode=content&id=".$pages[$i]->getPageId()."'>".$pages[$i]->getTitle()."</a></li>";
+
+                if(strlen($pages[$i]->getNavOveride()) > 0)
+                {
+                    $sideNav .= $activeNav."<a href='".$pages[$i]->getNavOveride()."'>".$pages[$i]->getTitle()."</a></li>";
+                }
+                else
+                {
+                    $sideNav .= $activeNav."<a href='?mode=content&id=".$pages[$i]->getPageId()."'>".$pages[$i]->getTitle()."</a></li>";
+                }
             }
             $sideNav .= "</ul>";
             return $sideNav;
@@ -112,13 +136,27 @@ class navController {
     public function loadPageAdmin($mode,$id)
     {
         $adminNav = "<ul class='nav nav-pills nav-stacked'>";
-        if($mode = "content")
+        if($mode == "content")
         {
             $adminNav .= "<li><a href='?mode=create&type=page'><span class='glyphicon glyphicon-plus'></span> Create New Page</a></li><li><a href='?mode=edit&type=page&id=".$id."'><span class='glyphicon glyphicon-pencil'></span> Edit This Page</a></li>";
         }
-
+        else if($mode == "project")
+        {
+            if(strlen($id) > 0)
+            {
+                $adminNav .= "<li><a href='?mode=edit&type=project&id=".$id."'><span class='glyphicon glyphicon-pencil'></span> Edit This Project</a></li>";
+                $adminNav .= "<li><a href='?mode=manage&type=sponsor&id=".$id."'>Manage Sponsor/Partner</a></li>";
+                $adminNav .= "<li><a href='?mode=manage&type=collaborator&id='".$id."'>Manage Collaborators</a></li>";
+            }
+            else
+            {
+                $adminNav .= "<li><a href='?mode=create&type=project'><span class='glyphicon glyphicon-plus'></span> Create New Project</a></li>";
+            }
+        }
+        $adminNav .= "</ul>";
         return $adminNav;
     }
+
 
     /**
      * @param mixed $db

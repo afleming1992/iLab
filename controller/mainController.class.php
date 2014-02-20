@@ -76,6 +76,36 @@ class mainController
         $this->loadFooter();
     }
 
+    public function loadProjectPage($id)
+    {
+        $project = new Project($this->getDb(),$id);
+        if($project->getProject())
+        {
+            $this->loadPageHeader();
+            $section = new Section($this->getDb(),3);
+            $sideNav = $this->getNavController()->loadSideNavigation($section->getSectionId());
+            $adminSection = $this->getNavController()->loadPageAdmin("project",$id);
+            $admin = false;
+            if(isset($_SESSION['username']))
+            {
+                $result = $this->getDb()->query("SELECT * FROM project_collaborator WHERE username = '".$_SESSION['username']."' AND projectId = '$id'");
+                if($data = $result->fetch())
+                {
+                    if($data['admin'] == 1)
+                    {
+                        $admin = true;
+                    }
+                }
+            }
+            include('content/projectView.php');
+            $this->loadFooter();
+        }
+        else
+        {
+            $this->pageNotFound();
+        }
+    }
+
     public function loadEditPage($id)
     {
         $page = new Page($this->getDb(),$id);
@@ -88,6 +118,87 @@ class mainController
                 include("forms/editPage.php");
             }
             $this->loadFooter();
+        }
+        else
+        {
+            $this->pageNotFound();
+        }
+    }
+
+    public function loadEditProject($id)
+    {
+        $project = new Project($this->getDb(),$id);
+        if($project->getProject())
+        {
+            $this->loadPageHeader();
+            $result = "SELECT * FROM project_collaborator WHERE username = '".$_SESSION['username']."' AND admin = '1'";
+            if($this->checkLoginAndAccess(1) || $data = $result->fetch())
+            {
+                $sections = $this->getAllSections($id);
+                include("forms/editProject.php");
+                $this->loadFooter();
+            }
+            else
+            {
+                $this->checkLoginandAccess(3); //This will send the user to Access Denied
+            }
+        }
+    }
+
+    public function editProject($id,$name,$description,$startDate,$endDate,$website,$newlogo)
+    {
+        $project = new Project($this->getDb(),$id);
+        if($project->getProject())
+        {
+            $name = htmlspecialchars($name,ENT_QUOTES);
+            $description = htmlspecialchars($description,ENT_QUOTES);
+            $project->setName($name);
+            $project->setDescription($description);
+            $project->setStartDate($project->normalToSql($startDate));
+            $project->setEndDate($project->normalToSql($endDate));
+            $project->setWebsite($website);
+            if($newlogo == "yes")
+            {
+                $allowedExts = array("gif", "jpeg", "jpg", "png");
+                $temp = explode(".", $_FILES["project_logo"]["name"]);
+                $extension = end($temp);
+                if (($_FILES["project_photo"]["size"] < 1000000)
+                    && in_array($extension, $allowedExts))
+                {
+                    if ($_FILES["profile_photo"]["error"] > 0)
+                    {
+                        echo "Return Code: " . $_FILES["project_logo"]["error"] . "<br>";
+                    }
+                    else
+                    {
+                        //echo "Upload: " . $_FILES["project_logo"]["name"] . "<br>";
+                        //echo "Type: " . $_FILES["project_logo"]["type"] . "<br>";
+                        //echo "Size: " . ($_FILES["project_logo"]["size"] / 1024) . " kB<br>";
+                        //echo "Temp file: " . $_FILES["project_logo"]["tmp_name"] . "<br>";
+
+                        //echo "images/project/" .$_FILES["project_logo"]["name"];
+                        move_uploaded_file($_FILES["project_logo"]["tmp_name"],
+                                           "images/project/" .$_FILES["project_logo"]["name"]);
+
+                        $project->setLogo($_FILES["project_logo"]["name"]);
+                    }
+                }
+                else
+                {
+                    echo "Invalid file";
+                }
+            }
+            if($project->updateProject())
+            {
+                $this->loadProjectPage($project->getId());
+            }
+            else
+            {
+                $error = "The Project has not been updated on the Database. Please retry again!";
+                $this->loadPageHeader();
+                include("forms/editProject.php");
+                $this->loadPageFooter();
+            }
         }
         else
         {
@@ -254,6 +365,61 @@ class mainController
         exit();
     }
 
+    public function loadProjectList($past)
+    {
+        $this->loadPageHeader();
+        $projects = array();
+        $sideNav = $this->getNavController()->loadSideNavigation(3);
+        $adminSection = $this->getNavController()->loadPageAdmin($_GET['mode'],NULL);
+        $projects = $this->getAllProjects($past);
+        include('content/projectList.php');
+        $this->loadFooter();
+    }
+
+
+    public function loadSponsorsList($projectId)
+    {
+        $sponsors = array();
+        $project = new Project ($this->getDb(),$projectId);
+        if($project->getProject())
+        {
+            $sponsors = $project->findSponsorsAndPartners();
+            $fullSponsorList = $this->getAllSponsors();
+            if($_SESSION['access_level'] > 0 || $project->checkIfAdmin($_SESSION['username']))
+            {
+                $this->loadPageHeader();
+                include("content/manageProjectSponsors.php");
+                $this->loadFooter();
+            }
+            else
+            {
+                $this->loadAccessDenied();
+            }
+        }
+        else
+        {
+            $this->pageNotFound();
+        }
+    }
+
+    public function getAllSponsors()
+    {
+        $sponsors = array();
+        $result = $this->getDb()->query("SELECT * FROM sponsor");
+        if($result)
+        {
+            while($data = $result->fetch())
+            {
+                $sponsor = new Sponsor($this->getDb(),$data['sponsorId']);
+                if($sponsor->getSponsor())
+                {
+                    $sponsors[] = $sponsor;
+                }
+            }
+        }
+        return $sponsors;
+    }
+
     public function loadContentPage($id)
     {
         $this->loadPageHeader();
@@ -337,6 +503,30 @@ class mainController
         return $sections;
     }
 
+    public function getAllProjects($past)
+    {
+        if($past == 1)
+        {
+            $where = "endDate < CURDATE()";
+        }
+        else
+        {
+            $where = "endDate > CURDATE()";
+        }
+        $result = $this->getDb()->query("SELECT * FROM project WHERE ".$where);
+        $projects = array();
+        if($result)
+        {
+            while($data = $result->fetch())
+            {
+                $project = new Project($this->getDb(),$data['projectId']);
+                $project->getProject();
+                $projects[] = $project;
+            }
+        }
+        return $projects;
+    }
+
     public function checkLoginandAccess($levelRequired)
     {
         if(isset($_SESSION['login']))
@@ -410,11 +600,10 @@ class mainController
         }
         return $users;
     }
+
     /**
      * @param mixed $db
      */
-
-    //Getters / Setters
     public function setDb($db)
     {
         $this->db = $db;
@@ -443,8 +632,4 @@ class mainController
     {
         return $this->navController;
     }
-
-
-
-
 } 
