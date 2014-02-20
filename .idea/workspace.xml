@@ -4,27 +4,7 @@
     <bookmark url="file://$PROJECT_DIR$/forms/editProject.php" line="46" mnemonic="1" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d9d7289d-c5e1-4998-8565-3063d663b2e0" name="Default" comment="Overhalled Look of Website and begining structuring&#10;# Please enter the commit message for your changes. Lines starting&#10;# with '#' will be ignored, and an empty message aborts the commit.&#10;# On branch master&#10;# Changes to be committed:&#10;#   (use &quot;git reset HEAD &lt;file&gt;...&quot; to unstage)&#10;#&#10;#&#9;new file:   css/bootstrap.css&#10;#&#9;modified:   css/main.css&#10;#&#9;new file:   fonts/glyphicons-halflings-regular.eot&#10;#&#9;new file:   fonts/glyphicons-halflings-regular.svg&#10;#&#9;new file:   fonts/glyphicons-halflings-regular.ttf&#10;#&#9;new file:   fonts/glyphicons-halflings-regular.woff&#10;#&#9;new file:   images/background.png&#10;#&#9;new file:   images/logo.ai&#10;#&#9;new file:   images/logo.png&#10;#&#9;modified:   index.php&#10;#&#9;new file:   js/bootstrap.js&#10;#&#9;new file:   js/bootstrap.min.js&#10;#&#9;new file:   navbar.php&#10;#&#9;new file:   nbproject/private/private.xml&#10;#&#10;&#10;&#10;">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/forms/editProject.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/content/manageProjectSponsors.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/content/projectList.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/content/projectView.php" />
-      <change type="DELETED" beforePath="E:\xampp\htdocs\ilab\nbproject\private\private.properties" afterPath="" />
-      <change type="DELETED" beforePath="E:\xampp\htdocs\ilab\nbproject\private\private.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\xampp\htdocs\ilab\nbproject\project.properties" afterPath="" />
-      <change type="DELETED" beforePath="E:\xampp\htdocs\ilab\nbproject\project.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classes/Project.class.php" afterPath="$PROJECT_DIR$/classes/Project.class.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classes/Sponsor.class.php" afterPath="$PROJECT_DIR$/classes/Sponsor.class.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controller/controller.php" afterPath="$PROJECT_DIR$/controller/controller.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/content/header.php" afterPath="$PROJECT_DIR$/content/header.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/css/main.css" afterPath="$PROJECT_DIR$/css/main.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controller/mainController.class.php" afterPath="$PROJECT_DIR$/controller/mainController.class.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controller/navController.class.php" afterPath="$PROJECT_DIR$/controller/navController.class.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/content/navbar.php" afterPath="$PROJECT_DIR$/content/navbar.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/classes/Database.class.php" afterPath="$PROJECT_DIR$/classes/Database.class.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/classes/Profile.class.php" afterPath="$PROJECT_DIR$/classes/Profile.class.php" />
-    </list>
+    <list default="true" id="d9d7289d-c5e1-4998-8565-3063d663b2e0" name="Default" comment="Overhalled Look of Website and begining structuring&#10;# Please enter the commit message for your changes. Lines starting&#10;# with '#' will be ignored, and an empty message aborts the commit.&#10;# On branch master&#10;# Changes to be committed:&#10;#   (use &quot;git reset HEAD &lt;file&gt;...&quot; to unstage)&#10;#&#10;#&#9;new file:   css/bootstrap.css&#10;#&#9;modified:   css/main.css&#10;#&#9;new file:   fonts/glyphicons-halflings-regular.eot&#10;#&#9;new file:   fonts/glyphicons-halflings-regular.svg&#10;#&#9;new file:   fonts/glyphicons-halflings-regular.ttf&#10;#&#9;new file:   fonts/glyphicons-halflings-regular.woff&#10;#&#9;new file:   images/background.png&#10;#&#9;new file:   images/logo.ai&#10;#&#9;new file:   images/logo.png&#10;#&#9;modified:   index.php&#10;#&#9;new file:   js/bootstrap.js&#10;#&#9;new file:   js/bootstrap.min.js&#10;#&#9;new file:   navbar.php&#10;#&#9;new file:   nbproject/private/private.xml&#10;#&#10;&#10;&#10;" />
     <ignored path="ilab.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -246,6 +226,8 @@
     </include_path>
   </component>
   <component name="ProjectFrameBounds">
+    <option name="x" value="570" />
+    <option name="y" value="53" />
     <option name="width" value="960" />
     <option name="height" value="1032" />
   </component>
@@ -321,6 +303,20 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="forms" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ilab" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ilab" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="database" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -486,8 +482,8 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="960" height="1032" extended-state="1" />
-    <editor active="true" />
+    <frame x="570" y="53" width="960" height="1032" extended-state="0" />
+    <editor active="false" />
     <layout>
       <window_info id="File Transfer" active="false" anchor="bottom" auto_hide="true" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.002181025" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32894737" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -496,7 +492,7 @@
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24973376" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.1985138" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27813163" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27813163" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />

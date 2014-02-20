@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 05, 2014 at 02:17 AM
+-- Generation Time: Feb 20, 2014 at 12:53 PM
 -- Server version: 5.5.34
 -- PHP Version: 5.4.22
 
@@ -58,20 +58,22 @@ CREATE TABLE IF NOT EXISTS `page` (
   PRIMARY KEY (`page_id`),
   KEY `author` (`author`),
   KEY `section` (`section`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
 --
 -- Dumping data for table `page`
 --
 
 INSERT INTO `page` (`page_id`, `section`, `section_homepage`, `author`, `title`, `content`, `restricted`, `time_last_updated`, `module`, `navOverride`, `navOrder`) VALUES
-(1, 2, 1, 'andrew', 'What we do', 'Testing 123', 0, '0000-00-00 00:00:00', '', '', 0),
+(1, 2, 1, 'andrew', 'What we do', '&lt;p&gt;Here we are!&lt;/p&gt;', 0, '0000-00-00 00:00:00', '', '', 0),
 (2, 3, 1, 'andrew', 'Research', 'Research Test', 0, '0000-00-00 00:00:00', '', '', 0),
 (3, 4, 1, 'andrew', 'Publications', 'Publications Test', 0, '0000-00-00 00:00:00', '', '', 0),
 (4, 5, 1, 'andrew', 'Intranet Home', 'Intranet Test', 1, '0000-00-00 00:00:00', '', '', 0),
-(5, 2, 0, 'andrew', 'Who we are', 'Who we are Content', 0, '2014-02-02 16:26:59', '', '', 0),
+(5, 2, 0, 'andrew', 'Who we are', '&lt;p&gt;The Staff Page!&lt;/p&gt;', 0, '2014-02-02 16:26:59', '', '', 0),
 (6, 2, 0, 'andrew', 'Current Collaborations', 'Collaborations Content', 0, '2014-02-02 16:27:44', '', '', 0),
-(7, 6, 1, 'andrew', 'News Home', 'News Home Content', 0, '2014-02-02 20:57:11', '', '', 0);
+(7, 6, 1, 'andrew', 'News Home', 'News Home Content', 0, '2014-02-02 20:57:11', '', '', 0),
+(8, 2, 0, 'andrew', 'Blah', '&lt;p&gt;Blah Blah Blah&lt;/p&gt;', 0, '2014-02-07 19:41:16', '', '', 0),
+(9, 3, 0, 'andrew', 'Current Research Projects', '', 0, '2014-02-16 20:57:45', '', '?mode=project', 0);
 
 -- --------------------------------------------------------
 
@@ -94,14 +96,20 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `role` varchar(100) NOT NULL,
   PRIMARY KEY (`profileId`),
   KEY `username` (`username`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
 
 --
 -- Dumping data for table `profile`
 --
 
 INSERT INTO `profile` (`profileId`, `username`, `real_name`, `email`, `website`, `bio`, `pure_id`, `linkedin`, `twitter`, `scholar`, `photo`, `role`) VALUES
-(1, 'andrew', 'Andrew Fleming', 'ajf9@hw.ac.uk', 'ajfleming.co.uk', 'Student studying Computer Science at Heriot-Watt University', '', 'http://www.linkedin.com/profile/view?id=201059312', '@afleming', '', 'ajf9.jpg', 'Web Developer');
+(1, 'andrew', 'Andrew Fleming', 'ajf9@hw.ac.uk', 'ajfleming.co.uk', '&lt;p&gt;I am a 4th Year Computer Science Student studying at Heriot-Watt. I am currently redesigning the iLab&#039;s website as part of my Honours Project.&lt;/p&gt;', 'blah', 'testing', 'afleming1992', 'testing', 'andrew.jpg', 'Web Developer'),
+(2, 'guest', 'iLab Guest', 'ajf9@hw.ac.uk', '', '', '', '', '', '', '', ''),
+(3, 'test', 'iLab Test', 'ajf9@hw.ac.uk', '', '', '', '', '', '', '', ''),
+(5, 'charlie', 'iLab Test', 'ajf9@hw.ac.uk', 'www.hw.ac.uk', '&lt;p&gt;BLAH BLAH BLAH&lt;/p&gt;', 'Blah', 'balh', 'afleming1992', 'blah', 'charlie.jpg', 'Charlie Tester'),
+(6, 'delta', 'Delta Ilab', 'delta@hw.ac.uk', '', '', '', '', '', '', '', ''),
+(7, 'echo', 'Echo Sierra', 'echo@hw.ac.uk', '', '', '', '', '', '', '', ''),
+(8, 'victor', 'Victor Sierra', 'victor@hw.ac.uk', '', '', '', '', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -116,8 +124,16 @@ CREATE TABLE IF NOT EXISTS `project` (
   `website` text NOT NULL,
   `startDate` date NOT NULL,
   `endDate` date NOT NULL,
+  `logo` text NOT NULL,
   PRIMARY KEY (`projectId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `project`
+--
+
+INSERT INTO `project` (`projectId`, `name`, `description`, `website`, `startDate`, `endDate`, `logo`) VALUES
+(1, 'Emote', '&lt;p&gt;This FP7 Project, EMOTE project will design, develop and evaluate a new generation of artificial embodied tutors that have perceptive capabilities to engage in empathic interactions with learners in a shared physical space.&lt;/p&gt;', 'www.emote-project.eu', '2014-02-01', '2014-02-28', 'emote_logo_white.png');
 
 -- --------------------------------------------------------
 
@@ -134,7 +150,15 @@ CREATE TABLE IF NOT EXISTS `project_collaborator` (
   PRIMARY KEY (`collaboratorId`),
   KEY `username` (`username`),
   KEY `projectId` (`projectId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `project_collaborator`
+--
+
+INSERT INTO `project_collaborator` (`collaboratorId`, `username`, `projectId`, `admin`, `hidden`) VALUES
+(1, 'andrew', 1, 1, 0),
+(2, 'charlie', 1, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -146,10 +170,19 @@ CREATE TABLE IF NOT EXISTS `project_sponsor` (
   `projectSponsorId` int(11) NOT NULL AUTO_INCREMENT,
   `projectId` int(11) NOT NULL,
   `sponsorId` int(11) NOT NULL,
+  `type` varchar(8) NOT NULL,
   PRIMARY KEY (`projectSponsorId`),
   KEY `projectId` (`projectId`),
   KEY `sponsorId` (`sponsorId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `project_sponsor`
+--
+
+INSERT INTO `project_sponsor` (`projectSponsorId`, `projectId`, `sponsorId`, `type`) VALUES
+(1, 1, 1, 'partner'),
+(2, 1, 2, 'partner');
 
 -- --------------------------------------------------------
 
@@ -238,9 +271,16 @@ CREATE TABLE IF NOT EXISTS `sponsor` (
   `name` varchar(50) NOT NULL,
   `logo` varchar(100) NOT NULL,
   `website` text NOT NULL,
-  `type` varchar(8) NOT NULL,
   PRIMARY KEY (`sponsorId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `sponsor`
+--
+
+INSERT INTO `sponsor` (`sponsorId`, `name`, `logo`, `website`) VALUES
+(1, 'University of Birmingham', 'university-birmingham.jpg', 'http://www.birmingham.ac.uk/'),
+(2, 'Heriot-Watt University', 'heriot-watt-University.png', 'www.hw.ac.uk');
 
 -- --------------------------------------------------------
 
@@ -262,7 +302,13 @@ CREATE TABLE IF NOT EXISTS `user` (
 --
 
 INSERT INTO `user` (`username`, `password`, `access_level`, `hidden`, `salt`) VALUES
-('andrew', '4e242d97ce82d10917cd59017a6c9123', 2, 0, 'PgPJTjzPmf1GyPSeT3YYRRgBnewCB5wV');
+('andrew', 'e2192149acd787bdd6355db545f1a418', 2, 0, 'EMCfYiX9H1UPEW5YcvAPbH06VYq0ikrh'),
+('charlie', 'e2192149acd787bdd6355db545f1a418', 2, 0, 'EMCfYiX9H1UPEW5YcvAPbH06VYq0ikrh'),
+('delta', 'e2192149acd787bdd6355db545f1a418', 2, 0, 'EMCfYiX9H1UPEW5YcvAPbH06VYq0ikrh'),
+('echo', 'e2192149acd787bdd6355db545f1a418', 2, 0, 'EMCfYiX9H1UPEW5YcvAPbH06VYq0ikrh'),
+('guest', 'e2192149acd787bdd6355db545f1a418', 2, 0, 'EMCfYiX9H1UPEW5YcvAPbH06VYq0ikrh'),
+('test', 'e2192149acd787bdd6355db545f1a418', 2, 0, 'EMCfYiX9H1UPEW5YcvAPbH06VYq0ikrh'),
+('victor', 'e2192149acd787bdd6355db545f1a418', 2, 0, 'EMCfYiX9H1UPEW5YcvAPbH06VYq0ikrh');
 
 --
 -- Constraints for dumped tables
@@ -282,17 +328,11 @@ ALTER TABLE `page`
   ADD CONSTRAINT `page_ibfk_2` FOREIGN KEY (`section`) REFERENCES `section` (`section_id`);
 
 --
--- Constraints for table `profile`
---
-ALTER TABLE `profile`
-  ADD CONSTRAINT `profile_ibfk_1` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
 -- Constraints for table `project_collaborator`
 --
 ALTER TABLE `project_collaborator`
   ADD CONSTRAINT `project_collaborator_ibfk_1` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `project_collaborator_ibfk_2` FOREIGN KEY (`projectId`) REFERENCES `profile` (`profileId`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `project_collaborator_ibfk_2` FOREIGN KEY (`projectId`) REFERENCES `project` (`projectId`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `project_sponsor`
