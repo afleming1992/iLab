@@ -26,6 +26,7 @@ class Sponsor
         $result = $this->getDb()->query("INSERT INTO sponsor (name,logo,website) VALUES ('".$this->getName()."','".$this->getLogo()."','".$this->getWebsite()."')");
         if($result)
         {
+            $this->setId($this->getDb()->lastInsertId());
             return true;
         }
         else
@@ -36,13 +37,16 @@ class Sponsor
 
     public function addLink($projectId,$type)
     {
-        $result = $this->getDb()->query("INSERT INTO project_sponsor (projectId,sponsorId,type) VALUES ('$projectId','".$this->getId()."','$type')");
+        $query = "INSERT INTO project_sponsor (projectId,sponsorId,type) VALUES ('$projectId','".$this->getId()."','$type')";
+        //print($query);
+        $result = $this->getDb()->query($query);
         if($result)
         {
             return true;
         }
         else
         {
+            print("Add Fail");
             return false;
         }
     }

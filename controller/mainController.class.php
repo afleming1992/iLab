@@ -601,6 +601,70 @@ class mainController
         return $users;
     }
 
+    public function addSponsorLink($sponsorId,$projectId,$type)
+    {
+        $sponsor = new Sponsor($this->getDb(),$sponsorId);
+        if($sponsor->getSponsor())
+        {
+            if($sponsor->addLink($projectId,$type))
+            {
+                $success = $sponsor->getName()."added to project as a ".$type;
+            }
+            else
+            {
+                $error = "Link couldn't be added";
+            }
+        }
+        else
+        {
+            $error = "Couldn't find Sponsor in Database";
+        }
+        $this->loadSponsorsList($projectId);
+    }
+
+    public function removeSponsorLink($sponsorId,$projectId)
+    {
+        $sponsor = new Sponsor($this->getDb(),$sponsorId);
+        if($sponsor->getSponsor())
+        {
+            if($sponsor->removeLink($projectId))
+            {
+                $success = $sponsor->getName()."has been removed from this project!";
+            }
+        }
+        else
+        {
+            $error = "Sponsor Link wasn't removed!";
+        }
+        $this->loadSponsorsList($projectId);
+    }
+
+    public function upload($file,$directory,$fileName)
+    {
+        $allowedExts = array("gif", "jpeg", "jpg", "png","pdf");
+        $temp = explode(".", $file["name"]);
+        $extension = end($temp);
+        if (($file["size"] < 1000000) && in_array($extension, $allowedExts))
+        {
+            if ($file["error"] > 0)
+            {
+                 echo "Return Code: " . $file["error"] . "<br>";
+            }
+            else
+            {
+                //echo "Upload: " . $_FILES["profile_photo"]["name"] . "<br>";
+                //echo "Type: " . $_FILES["profile_photo"]["type"] . "<br>";
+                //echo "Size: " . ($_FILES["profile_photo"]["size"] / 1024) . " kB<br>";
+                //echo "Temp file: " . $_FILES["profile_photo"]["tmp_name"] . "<br>";
+                move_uploaded_file($file["tmp_name"],$directory.$fileName);
+            }
+        }
+        else
+        {
+            echo "Invalid file";
+        }
+    }
+
     /**
      * @param mixed $db
      */

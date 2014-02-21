@@ -9,7 +9,7 @@
         </button>
         <a class='navbar-brand' href='index.php'><img src='images/logo.png' height='55px'/></a>
       </div>
-      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <div class="collapse navbar-collapse navbar-ex1-collapse" id="bs-example-navbar-collapse-1">
         <ul class='nav navbar-nav'>
           <li><a href='index.php'>Home</a></li>
             <?php
@@ -20,7 +20,7 @@
             if(isset($_SESSION['login']))
             {
         ?>
-            <div class="btn-group" style='float:right;'>
+            <div class="btn-group visible-md visible-lg" style='float:right;'>
                 <button id="navbar_profile" type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" style='padding:5px'">
                    <?php
                         $user = new Profile($this->db,$_SESSION['username']);

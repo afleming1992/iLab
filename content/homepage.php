@@ -1,5 +1,6 @@
+<div class="container-fluid">
 <div class="row col-md-14">
-    <div class='col-md-8' style='float:left'>
+    <div class='col-md-8 col-xs-12' style='float:left'>
         <div class="panel panel-default">
             <div class="panel-body">
                 <?php
@@ -8,7 +9,8 @@
             </div>
         </div>
     </div>
-    <div class='col-md-4' style='float:right'>
+
+    <div class='col-md-4 col-xs-12' style='float:right'>
         <div class="panel panel-info">
             <div class="panel-heading">
                 <h3 class="panel-title">
@@ -83,4 +85,5 @@
             </div>
         </div>
     </div>
+</div>
 </div>

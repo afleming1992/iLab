@@ -44,14 +44,16 @@ body
     font-size:25px;
 }
 
-.wrapper
-{
-    width:1024px;
-    margin-left:auto;
-    margin-right:auto;
-    height:auto;
-    padding:0px;
-    box-shadow: 5px 0 15px -4px rgba(128, 128, 128, 0.8), -5px 0 8px -4px rgba(128, 128, 128, 0.8);
+@media (min-width:1024px)  {
+    .wrapper
+    {
+        width:1024px;
+        margin-left:auto;
+        margin-right:auto;
+        height:auto;
+        padding:0px;
+        box-shadow: 5px 0 15px -4px rgba(128, 128, 128, 0.8), -5px 0 8px -4px rgba(128, 128, 128, 0.8);
+    }
 }
 
 .nav-pills

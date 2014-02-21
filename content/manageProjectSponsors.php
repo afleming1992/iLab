@@ -22,6 +22,29 @@
         <h3 class="panel-title">Sponsor/Partner Management for <?php echo $project->getName(); ?></h3>
     </div>
     <div class="panel-body">
+        <?php
+            if(isset($error))
+            {
+                ?>
+                    <div class="col-md-12">
+                        <div class="alert alert-danger">
+                            <?php echo $error; ?>
+                        </div>
+                    </div>
+                <?php
+            }
+
+            if(isset($success))
+            {
+                ?>
+                <div class="col-md-12">
+                    <div class="alert alert-success">
+                        <?php echo $success; ?>
+                    </div>
+                </div>
+                <?php
+            }
+        ?>
         <div class="row">
             <div class="col-md-12">
                 <div class="pull-left">
@@ -56,7 +79,7 @@
                                         foreach($sponsors as $sponsor)
                                         {
                                             ?>
-                                                <tr><td><img src="<?php echo $sponsor["sponsor"]->getFullLogo(); ?>" style="max-width:100px;max-height:100px;"/></td><td><?php echo $sponsor["sponsor"]->getName(); ?></td><td><?php echo $sponsor["type"]; ?></td><td><a alt="Switch type" class="btn btn-info btn-sm"><span class="glyphicon glyphicon-refresh"></span></a><a class="btn btn-sm btn-warning"><span class="glyphicon glyphicon-pencil"></span></a><a class="btn btn-danger btn-sm"><span class="
+                                                <tr><td><img src="<?php echo $sponsor["sponsor"]->getFullLogo(); ?>" style="max-width:100px;max-height:100px;"/></td><td><?php echo $sponsor["sponsor"]->getName(); ?></td><td><?php echo $sponsor["type"]; ?></td><td><a alt="Switch type" class="btn btn-info btn-sm"><span class="glyphicon glyphicon-refresh"></span></a><a class="btn btn-sm btn-warning"><span class="glyphicon glyphicon-pencil"></span></a><a href="?mode=remove&type=sponsorLink&sponsorId=<?php echo $sponsor['sponsor']->getId(); ?>&projectId=<?php echo $project->getId(); ?>" class="btn btn-danger btn-sm"><span class="
 glyphicon glyphicon-remove"></span></a></td></tr>
                                             <?php
                                         }
@@ -138,7 +161,7 @@ glyphicon glyphicon-remove"></span></a></td></tr>
                         </select>
                     </div>
                     <input type="hidden" name="projectId" value="<?php echo $project->getId(); ?>" />
-                    <input type="hidden" name="addSponsor" value="1" />
+                    <input type="hidden" name="addExistingSponsor" value="1" />
                     <button class="btn btn-success" type="submit">Add Sponsor/Partner</button>
                 </form>
             </div>

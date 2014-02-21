@@ -1,4 +1,4 @@
-<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+<div style="width:624px;" id="carousel-example-generic" class="carousel slide" data-ride="carousel">
   <!-- Indicators -->
   <ol class="carousel-indicators">
     <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="item">
-        <img src="images/test_image.jpg" />
+        <img style="width:624px;"src="images/test_image.jpg" />
     </div>
   </div>
 

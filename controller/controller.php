@@ -51,6 +51,29 @@
         exit();
     }
 
+    if(isset($_POST['addSponsor']))
+    {
+        $sponsor = new Sponsor($db->getDb(),0);
+        $sponsor->setName($_POST['sponsor_name']);
+        $sponsor->setWebsite($_POST['sponsor_website']);
+        $fileName = $_FILES['sponsor_logo']['name'];
+        $app->upload($_FILES['sponsor_logo'],"images/sponsor/",$fileName);
+        $sponsor->setLogo($fileName);
+        if($sponsor->createSponsor())
+        {
+            $sponsor->addLink($_POST['projectId'],$_POST['sponsor_type']);
+        }
+    }
+
+    if(isset($_POST['addExistingSponsor']))
+    {
+        $sponsor = new Sponsor($db->getDb(),$_POST['sponsorId']);
+        if($sponsor->getSponsor())
+        {
+            $sponsor->addLink($_POST['projectId'],$_POST['sponsor_type']);
+        }
+    }
+
     if(isset($_GET['mode']))
     {
         $mode = $_GET['mode'];
@@ -150,6 +173,13 @@
             else
             {
                 $app->pageNotFound();
+            }
+        }
+        else if(strcmp($mode,"remove") == 0)
+        {
+            if($_GET['type'] == "sponsorLink")
+            {
+                $app->removeSponsorLink($_GET['sponsorId'],$_GET['projectId']);
             }
         }
         else if(strcmp($mode,"admin") == 0)

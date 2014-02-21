@@ -143,7 +143,7 @@ class Project {
             while($data = $result->fetch())
             {
                     $sponsor = new Sponsor($this->getDb(),$data['sponsorId']);
-
+                    $sponsor->getSponsor();
                     $sponsors[] = $sponsor;
             }
         }

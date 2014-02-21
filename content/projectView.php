@@ -14,7 +14,14 @@
                   </a>
                   <div class='media-body'>
                       <h5 class='media-heading'><?php echo $sponsor->getName(); ?></h5>
-                      <a class='btn btn-info btn-xs' href='<?php echo $sponsor->getWebsite(); ?>'><span class='glyphicon glyphicon-globe'></span> Website</a>
+                      <?php
+                        if(strlen($sponsor->getWebsite()) > 0)
+                        {
+                            ?>
+                            <a class='btn btn-info btn-xs' href='<?php echo $sponsor->getWebsite(); ?>'><span class='glyphicon glyphicon-globe'></span> Website</a>
+                            <?php
+                        }
+                        ?>
                   </div>
               </div>
               <?php
