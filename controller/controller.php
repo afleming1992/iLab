@@ -45,9 +45,21 @@
         exit();
     }
 
+    if(isset($_POST['addCollaborator']))
+    {
+        $app->addContributorToProject($_POST['projectId'],$_POST['collaborator_username'],$_POST['collaborator_admin'],$_POST['collaborator_hidden']);
+        exit();
+    }
+
     if(isset($_POST['editProject']))
     {
         $app->editProject($_POST['project_id'],$_POST['project_name'],$_POST['project_description'],$_POST['project_startDate'],$_POST['project_endDate'],$_POST['project_website'],$_POST['new_logo']);
+        exit();
+    }
+
+    if(isset($_POST['editSponsor']))
+    {
+        $app->editSponsor($_POST['sponsor_id'],$_POST['sponsor_name'],$_POST['sponsor_website'],$_POST['new_photo'],$_FILES['sponsor_logo'],$_POST['project']);
         exit();
     }
 
@@ -78,6 +90,16 @@
     {
         $mode = $_GET['mode'];
         //Do Exit at the end of each Control Function
+        if(strcmp($mode,"changeSponsorType") == 0)
+        {
+            $sponsor = new Sponsor($db->getDb(),$_GET['sponsorId']);
+            if($sponsor->getSponsor())
+            {
+                $sponsor->switchType($_GET['projectId']);
+            }
+            $app->loadSponsorsList($_GET['projectId']);
+            exit();
+        }
         if(strcmp($mode,"content") == 0)
         {
             //View Standard Content Page Mode
@@ -111,6 +133,14 @@
                 if(strcmp($_GET['type'],"sponsor") == 0)
                 {
                     $app->loadSponsorsList($_GET['id']);
+                }
+                else if(strcmp($_GET['type'],"collaborator") == 0)
+                {
+                    $app->loadCollaboratorsList($_GET['id']);
+                }
+                else
+                {
+                    $app->pageNotFound();
                 }
             }
             else
@@ -169,6 +199,10 @@
                 {
                     $app->loadEditProject($_GET['id']);
                 }
+                else if(strcmp($_GET['type'],"sponsor") == 0)
+                {
+                    $app->loadEditSponsor($_GET['id']);
+                }
             }
             else
             {
@@ -180,6 +214,11 @@
             if($_GET['type'] == "sponsorLink")
             {
                 $app->removeSponsorLink($_GET['sponsorId'],$_GET['projectId']);
+            }
+            else if($_GET['type'] == "collaborator")
+            {
+                $app->removeContributorFromProject($_GET['projectId'],$_GET['username']);
+                exit();
             }
         }
         else if(strcmp($mode,"admin") == 0)

@@ -146,7 +146,7 @@ class navController {
             {
                 $adminNav .= "<li><a href='?mode=edit&type=project&id=".$id."'><span class='glyphicon glyphicon-pencil'></span> Edit This Project</a></li>";
                 $adminNav .= "<li><a href='?mode=manage&type=sponsor&id=".$id."'>Manage Sponsor/Partner</a></li>";
-                $adminNav .= "<li><a href='?mode=manage&type=collaborator&id='".$id."'>Manage Collaborators</a></li>";
+                $adminNav .= "<li><a href='?mode=manage&type=collaborator&id=".$id."'>Manage Collaborators</a></li>";
             }
             else
             {

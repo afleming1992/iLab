@@ -96,6 +96,22 @@ class Project {
         return $contributors;
     }
 
+    public function findNonContributors()
+    {
+        $result = $this->getDb()->query("SELECT * FROM user WHERE username NOT IN (SELECT username FROM project_collaborator WHERE projectId = '".$this->getId()."')");
+        $nonContributors = array();
+        if($result)
+        {
+            while($data = $result->fetch())
+            {
+                $user = new User($this->getDb(),$data['username']);
+                $user->getProfile()->getProfile();
+                $nonContributors[] = $user;
+            }
+        }
+        return $nonContributors;
+    }
+
     public function checkIfAdmin($username)
     {
         $contributors = $this->getContributors();
@@ -164,6 +180,32 @@ class Project {
             }
         }
         $this->setPartners($partners);
+    }
+
+    public function addCollaborator($username,$admin,$hidden)
+    {
+        $result = $this->getDb()->query("INSERT INTO project_collaborator (username,projectId,admin,hidden) VALUES ('$username','".$this->getId()."','$admin','$hidden')");
+        if($result)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function removeCollaborator($username)
+    {
+        $result = $this->getDb()->query("DELETE FROM project_collaborator WHERE projectId = '".$this->getId()."' AND username = '$username'");
+        if($result)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     /**
@@ -351,7 +393,7 @@ class Project {
     public function getFullLogo()
     {
         $file = "images/project/".$this->logo;
-        if(file_exists($file))
+        if(file_exists($file) && strlen($this->getLogo()) > 0)
         {
             return $file;
         }

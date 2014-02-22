@@ -152,6 +152,33 @@ class Sponsor
         $this->name = $name;
     }
 
+    public function switchType($project_id)
+    {
+        $result = $this->getDb()->query("SELECT * FROM project_sponsor WHERE sponsorId = '".$this->getId()."' AND projectId = '".$project_id."'");
+        if($result)
+        {
+            $data = $result->fetch();
+            $id = $data['projectSponsorId'];
+            if($data['type'] == "partner")
+            {
+                $type = "sponsor";
+            }
+            else
+            {
+                $type = "partner";
+            }
+
+            $update = $this->getDb()->query("UPDATE project_sponsor SET type = '".$type."' WHERE projectSponsorId = '".$id."'");
+            if($update)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
     /**
      * @return mixed
      */

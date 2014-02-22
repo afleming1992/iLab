@@ -273,6 +273,34 @@ class mainController
         }
     }
 
+    public function editSponsor($sponsorId,$name,$website,$new_photo,$file,$project)
+    {
+        $sponsor = new Sponsor($this->getDb(),$sponsorId);
+        if($sponsor->getSponsor())
+        {
+            $sponsor->setName($name);
+            $sponsor->setWebsite($website);
+            if($new_photo == "yes")
+            {
+                $this->upload($file,"images/sponsor/",$file['name']);
+                $sponsor->setLogo($file['name']);
+            }
+            if($sponsor->updateSponsor())
+            {
+                $success = "Sponsor successfully Updated";
+            }
+            else
+            {
+                $error = "Sorry! We couldn't update the Sponsor!";
+            }
+            $this->loadSponsorsList($project);
+        }
+        else
+        {
+            $this->loadSponsorsList($project);
+        }
+    }
+
     public function editUser($admin,$username,$realname,$email,$access,$newpassword,$password,$hidden,$role,$website,$bio,$pureId,$twitter,$scholar,$linkedin,$newphoto,$photolink)
     {
         if($newphoto == "yes")
@@ -402,6 +430,27 @@ class mainController
         }
     }
 
+    public function loadCollaboratorsList($projectId)
+    {
+        $collaborators = array();
+        $project = new Project($this->getDb(),$projectId);
+        if($project->getProject())
+        {
+            $collaborators = $project->findContributors();
+            $nonContributors = $project->findNonContributors();
+            if($_SESSION['access_level'] > 0 || $project->checkIfAdmin($_SESSION['username']))
+            {
+                $this->loadPageHeader();
+                include("content/manageCollaborators.php");
+                $this->loadFooter();
+            }
+            else
+            {
+                $this->loadAccessDenied();
+            }
+        }
+    }
+
     public function getAllSponsors()
     {
         $sponsors = array();
@@ -462,6 +511,24 @@ class mainController
         if($this->checkLoginandAccess(2))
         {
             include("forms/addUser.php");
+        }
+        $this->loadFooter();
+    }
+
+    public function loadEditSponsor($id)
+    {
+        $this->loadPageHeader();
+        if($this->checkLoginandAccess(1))
+        {
+            $sponsor = new Sponsor($this->getDb(),$id);
+            if($sponsor->getSponsor())
+            {
+                include("forms/editSponsor.php");
+            }
+            else
+            {
+                $this->contentNotFound();
+            }
         }
         $this->loadFooter();
     }
@@ -637,6 +704,47 @@ class mainController
             $error = "Sponsor Link wasn't removed!";
         }
         $this->loadSponsorsList($projectId);
+    }
+
+    public function addContributorToProject($projectId,$username,$admin,$hidden)
+    {
+        $project = new Project($this->getDb(),$projectId);
+        if($project->getProject())
+        {
+            if($project->addCollaborator($username,$admin,$hidden))
+            {
+                $this->loadCollaboratorsList($projectId);
+            }
+            else
+            {
+                $this->pageNotFound();
+            }
+        }
+        else
+        {
+            print("Lalal");
+            $this->pageNotFound();
+        }
+    }
+
+    public function removeContributorFromProject($projectId,$username)
+    {
+        $project = new Project($this->getDb(),$projectId);
+        if($project->getProject())
+        {
+            if($project->removeCollaborator($username))
+            {
+                $this->loadCollaboratorsList($projectId);
+            }
+            else
+            {
+                $this->pageNotFound();
+            }
+        }
+        else
+        {
+            $this->pageNotFound();
+        }
     }
 
     public function upload($file,$directory,$fileName)

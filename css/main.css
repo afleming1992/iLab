@@ -19,6 +19,16 @@ body
     margin:5px;
 }
 
+.green
+{
+   color:#008000;
+}
+
+.red
+{
+    color:#FF0000;
+}
+
 .profile:hover
 {
     outline: none;

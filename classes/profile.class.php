@@ -275,7 +275,7 @@ class profile
     public function getFullPhoto()
     {
         $file = "images/profile/".$this->photo;
-        if(file_exists($file))
+        if(file_exists($file) && strlen($this->getPhoto()) > 0)
         {
             return $file;
         }
