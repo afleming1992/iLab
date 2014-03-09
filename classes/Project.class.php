@@ -392,7 +392,7 @@ class Project {
 
     public function getFullLogo()
     {
-        $file = "images/project/".$this->logo;
+        $file = "images/project/".$this->getLogo();
         if(file_exists($file) && strlen($this->getLogo()) > 0)
         {
             return $file;
@@ -401,5 +401,11 @@ class Project {
         {
             return "images/test-project.jpg";
         }
+    }
+
+    public function generateProfileLink()
+    {
+        $photo = $this->getFullLogo();
+        $link = "<a href=''><img src='".$photo."' /></a><script></script>";
     }
 } 

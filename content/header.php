@@ -5,6 +5,9 @@
     <title>Heriot-Watt Interaction Lab</title>
     <link href="css/bootstrap.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="css/main.css" />
+    <script src="js/jquery.min.js" ></script>
+    <script src="js/bootstrap.js" /></script>
+    <script src="jquery-ui/js/jquery-ui.custom.min.js"></script>
     <script type="text/javascript" src="js/tinymce/tinymce.min.js"></script>
     <script type="text/javascript">
        tinymce.init({
@@ -21,12 +24,8 @@
         });
     </script>
     <link rel="stylesheet" href="jquery-ui/css/flick/jquery-ui.custom.css" />
-
 </head>
 <body>
-    <script src="js/jquery.min.js" ></script>
-    <script src="js/bootstrap.js" /></script>
-    <script src="jquery-ui/js/jquery-ui.custom.min.js"></script>
     <div class="wrapper">
         <?php
             if(isset($message))

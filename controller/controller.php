@@ -21,12 +21,20 @@
     //Form Handling
     if(isset($_POST['createPage']))
     {
-        $app->createNewPage($_POST['page_title'],$_POST['page_section'],$_POST['page_content'],$_POST['page_module'],$_POST['page_restricted']);
+        $app->createNewPage($_POST['page_title'],$_POST['page_section'],$_POST['page_content'],$_POST['page_module'],$_POST['page_restricted'],$_POST['page_homepage']);
     }
 
     if(isset($_POST['editPage']))
     {
-        $message = $app->editPage($_POST['page_id'],$_POST['page_title'],$_POST['page_section'],$_POST['page_content'],$_POST['page_module'],$_POST['page_restricted']);
+        if(isset($_POST['page_homepage']))
+        {
+            $homepage = $_POST['page_homepage'];
+        }
+        else
+        {
+            $homepage = false;
+        }
+        $message = $app->editPage($_POST['page_id'],$_POST['page_title'],$_POST['page_section'],$_POST['page_content'],$_POST['page_module'],$_POST['page_restricted'],$_POST['page_homepage']);
     }
 
     if(isset($_POST['addUser']))
@@ -86,6 +94,24 @@
         }
     }
 
+    if(isset($_POST['createPublication']))
+    {
+        if($_POST['file_choice'] == "file")
+        {
+            $location = upload($_FILES['publication_file'],"uploads/publications/",$_FILES['publication_file']['name']);
+        }
+        else if($_POST['file_choice'] == "link")
+        {
+            $location = $_POST['publication_link'];
+        }
+        else
+        {
+            $location = "";
+        }
+        $app->createPublication($_POST['publication_title'],$_POST['publication_publishedIn'],$_POST['publication_publisher'],$_POST['publication_abstract'],$_POST['publication_year'],$location);
+        exit();
+    }
+
     if(isset($_GET['mode']))
     {
         $mode = $_GET['mode'];
@@ -125,6 +151,17 @@
                 $app->loadProjectList($past);
             }
             exit();
+        }
+        else if(strcmp($mode,"publication") == 0)
+        {
+            if(isset($_GET['id']))
+            {
+                $app->loadPublication($_GET['id']);
+            }
+            else
+            {
+                $app->loadPublicationList();
+            }
         }
         else if(strcmp($mode,"manage") == 0)
         {
@@ -169,6 +206,10 @@
                 {
                     $app->loadCreatePage();
                 }
+                else if(strcmp($_GET['type'],"publication") == 0)
+                {
+                    $app->loadCreatePublication();
+                }
                 else
                 {
                     $app->pageNotFound();
@@ -203,13 +244,17 @@
                 {
                     $app->loadEditSponsor($_GET['id']);
                 }
+                else if(strcmp($_GET['type'],"publication") == 0)
+                {
+                    $app->loadEditPublication($_GET['id']);
+                }
             }
             else
             {
                 $app->pageNotFound();
             }
         }
-        else if(strcmp($mode,"remove") == 0)
+        else if(strcmp($mode,"delete") == 0)
         {
             if($_GET['type'] == "sponsorLink")
             {
@@ -219,6 +264,26 @@
             {
                 $app->removeContributorFromProject($_GET['projectId'],$_GET['username']);
                 exit();
+            }
+            else if($_GET['type'] == "publication")
+            {
+                $publication = new Publication($db,$_GET['id']);
+                if($publication->deletePublication())
+                {
+                    $app->loadPublicationList();
+                }
+            }
+            else if($_GET['type'] == "page")
+            {
+                $page = new Page($db,$_GET['id']);
+                if($page->deletePage())
+                {
+                    $app->loadUpdateStatus("<div class='alert alert-success'>The page has been deleted!</div>");
+                }
+                else
+                {
+                    $app->loadUpdateStatus("<div class='alert alert-danger'>The System was unable to delete the page! Here is what could of happened:- <ul><li>The Page was a Section Homepage and therefore couldn't be deleted</li><li>There may have been a database error!</li><li>The page has been deleted already</li></ul></div>");
+                }
             }
         }
         else if(strcmp($mode,"admin") == 0)

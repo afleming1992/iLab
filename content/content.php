@@ -61,3 +61,33 @@
             </div>
         </div>
  </div>
+<!-- Delete Page Modal -->
+<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Delete Page</h4>
+            </div>
+            <div class="modal-body">
+                <?php
+                    if($page->getSectionHomepage())
+                    {
+                        ?>
+                            <p>This page can not be deleted as it's currently this Section's Homepage. Please change the section's homepage before deleting again!</p>
+                            <button class="btn btn-primary" data-dismiss="modal">Close this Modal</button>
+                        <?php
+                    }
+                    else
+                    {
+                        ?>
+                            <h4>Are you absolutely sure you wish to delete this page?</h4>
+                            <a class="btn btn-success btn-block" href="?mode=delete&type=page&id=<?php echo $page->getPageId() ?>">Yes</a>
+                            <a class="btn btn-danger btn-block" data-dismiss="modal" href="#">No</a>
+                        <?php
+                    }
+                ?>
+            </div>
+        </div>
+    </div>
+</div>

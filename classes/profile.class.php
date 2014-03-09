@@ -15,7 +15,6 @@ class profile
     private $email;
     private $website;
     private $bio;
-    private $pure_id;
     private $linkedIn;
     private $twitter;
     private $scholar;
@@ -26,6 +25,10 @@ class profile
     {
         $this->db = $db;
         $this->username = $username;
+        if($username != NULL)
+        {
+            $this->getProfile();
+        }
     }
 
     public function createProfile()
@@ -52,12 +55,10 @@ class profile
             $this->setEmail($data['email']);
             $this->setWebsite($data['website']);
             $this->setBio($data['bio']);
-            $this->setPureId($data['pureId']);
             $this->setTwitter($data['twitter']);
             $this->setScholar($data['scholar']);
             $this->setPhoto($data['photo']);
             $this->setRole($data['role']);
-            $this->setPureId($data['pure_id']);
             $this->setLinkedIn($data['linkedin']);
             return true;
         }
@@ -158,22 +159,6 @@ class profile
     public function getLinkedIn()
     {
         return $this->linkedIn;
-    }
-
-    /**
-     * @param mixed $pure_id
-     */
-    public function setPureId($pure_id)
-    {
-        $this->pure_id = $pure_id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPureId()
-    {
-        return $this->pure_id;
     }
 
     /**
@@ -283,6 +268,12 @@ class profile
         {
             return "images/test-profile.jpg";
         }
+    }
+
+    public function generateProfileLink()
+    {
+       $link = "<a href='#'><img id='".$this->getUsername()."_tooltip' class='img-thumbnail profile' style='max-width:75px;max-height:75px;' src='".$this->getFullPhoto()."' data-toggle='tooltip' title='<b>".$this->getRealName()."</b><br /><em>".$this->getRole()."</em>' /></a>";
+       return $link;
     }
 
 

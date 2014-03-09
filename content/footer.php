@@ -1,6 +1,6 @@
 </div>
 <div class="footer centre-block navbar-default" style="text-align:center;">
-    This is the Footer
+    Heriot-Watt University, Edinburgh, EH14 4AS
 </div>
 <?php
     if(!isset($_SESSION['username']))

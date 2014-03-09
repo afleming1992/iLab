@@ -104,7 +104,7 @@ class navController {
             $pageCount = count($pages);
             for($i = 0;$i < $pageCount;$i++)
             {
-                if($pages[$i]->getPageId() == $_GET['id'])
+                if("?".$_SERVER['QUERY_STRING'] == $pages[$i]->getNavOveride() || $_GET['id'] == $pages[$i]->getPageId())
                 {
                     $activeNav = "<li class='active'>";
                 }
@@ -115,15 +115,34 @@ class navController {
 
                 if(strlen($pages[$i]->getNavOveride()) > 0)
                 {
-                    $sideNav .= $activeNav."<a href='".$pages[$i]->getNavOveride()."'>".$pages[$i]->getTitle()."</a></li>";
+                    $link = $pages[$i]->getNavOveride();
                 }
                 else
                 {
-                    $sideNav .= $activeNav."<a href='?mode=content&id=".$pages[$i]->getPageId()."'>".$pages[$i]->getTitle()."</a></li>";
+                    $link = "?mode=content&id=".$pages[$i]->getPageId()."'";
                 }
+
+                if($_SESSION['access_level'] == 2)
+                {
+                    $ordering = "<div class='col-md-4' style='padding-left:5px; padding-right:5px;'>";
+                    if($i != 0)
+                    {
+                        $ordering .= "<a class='btn btn-link ordering' href='#'><span class='glyphicon glyphicon-arrow-up'></span></a>";
+                    }
+
+                    if(($i + 1) != $pageCount)
+                    {
+                        $ordering .= "<a class='btn btn-link ordering' href='#'><span class='glyphicon glyphicon-arrow-down'></span></a>";
+                    }
+                    $ordering .= "</div>";
+                }
+                else
+                {
+                    $ordering = "";
+                }
+                $sideNav .= $activeNav."<a class='col-md-8' href='$link'>".$pages[$i]->getTitle()."</a>".$ordering."</li>";
             }
-            $sideNav .= "</ul>";
-            return $sideNav;
+                $sideNav .= "</ul>";
         }
         else
         {
@@ -139,6 +158,7 @@ class navController {
         if($mode == "content")
         {
             $adminNav .= "<li><a href='?mode=create&type=page'><span class='glyphicon glyphicon-plus'></span> Create New Page</a></li><li><a href='?mode=edit&type=page&id=".$id."'><span class='glyphicon glyphicon-pencil'></span> Edit This Page</a></li>";
+            $adminNav .= "<li><a href='' data-toggle='modal' data-target='#delete'><span class='glyphicon glyphicon-trash'></span> Delete Page</a></li>";
         }
         else if($mode == "project")
         {
@@ -151,6 +171,18 @@ class navController {
             else
             {
                 $adminNav .= "<li><a href='?mode=create&type=project'><span class='glyphicon glyphicon-plus'></span> Create New Project</a></li>";
+            }
+        }
+        else if($mode == "publication")
+        {
+            if(strlen($id) > 0)
+            {
+                $adminNav .= "<li><a href='?mode=edit&type=publication&id=".$id."'><span class='glyphicon glyphicon-pencil'></span> Edit this Publication</a></li>";
+                $adminNav .= "<li><a href='' data-toggle='modal' data-target='#delete'><span class='glyphicon glyphicon-trash'></span> Delete Publication</a></li>";
+            }
+            else
+            {
+                $adminNav .= "<li><a href='?mode=create&type=publication'><span class='glyphicon glyphicon-plus'></span> Create New Publication</a>";
             }
         }
         $adminNav .= "</ul>";

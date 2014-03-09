@@ -87,7 +87,7 @@
                                                     ?>
                                                 </td>
                                                 <td>
-                                                    <a href='?mode=remove&type=collaborator&projectId=<?php echo $project->getId(); ?>&sponsorId=<?php echo $collaborator['user']->getUsername() ?>' class="btn btn-sm btn-danger">
+                                                    <a href='?mode=delete&type=collaborator&projectId=<?php echo $project->getId(); ?>&sponsorId=<?php echo $collaborator['user']->getUsername() ?>' class="btn btn-sm btn-danger">
                                                         <span class="glyphicon glyphicon-remove"></span>
                                                     </a>
                                                 </td>

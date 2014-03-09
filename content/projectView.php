@@ -110,18 +110,17 @@
                                     {
                                         if($collaborator['hidden'] != 1)
                                         {
-                                            ?>
-                                                    <a href="#"><img id="<?php echo $collaborator['user']->getUsername(); ?>_tooltip" class='img-thumbnail profile' style='max-width:75px;max-height:75px;' src="<?php echo $collaborator['user']->getProfile()->getFullPhoto(); ?>" data-toggle="tooltip" title="<b><?php echo $collaborator['user']->getProfile()->getRealName(); ?></b><br /><?php echo $collaborator['user']->getProfile()->getRole(); ?>"/></a>
-                                                    <script>
-                                                        $('#<?php echo $collaborator["user"]->getUsername();?>_tooltip').tooltip({
-                                                            html: true
-                                                        });
-                                                    </script>
-                                            <?php
-                                            }
+                                           echo $collaborator['user']->getProfile()->generateProfileLink();
+                                        }
                                     }
-
                                 ?>
+                                <script>
+                                    $(document).ready(function(){
+                                        $(".profile").tooltip({
+                                            'html': true
+                                        })
+                                    });
+                                </script>
                             </div>
                         </div>
                     </div>

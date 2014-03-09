@@ -20,6 +20,7 @@ class Page {
     private $module;
     private $navOveride;
     private $navOrder;
+    private $sectionHomepage;
 
     public function __construct($db,$pageId)
     {
@@ -29,7 +30,7 @@ class Page {
 
     public function createPage()
     {
-        $query = "INSERT INTO page (section,author,title,content,restricted,module,navOrder) VALUES ('".$this->getSection()->getSectionId()."','".$this->getAuthor()->getUsername()."','".$this->getTitle()."','".$this->getContent()."','".$this->getRestricted()."','".$this->getModule()."','".$this->getNavOrder()."')";
+        $query = "INSERT INTO page (section,author,title,content,restricted,module,navOrder,section_homepage) VALUES ('".$this->getSection()->getSectionId()."','".$this->getAuthor()->getUsername()."','".$this->getTitle()."','".$this->getContent()."','".$this->getRestricted()."','".$this->getModule()."','".$this->getNavOrder()."','".$this->getSectionHomepage()."')";
         $result = $this->db->query($query);
         if($result)
         {
@@ -62,6 +63,14 @@ class Page {
             $this->setModule($data['module']);
             $this->setNavOveride($data['navOverride']);
             $this->setNavOrder($data['navOrder']);
+            if($data['section_homepage'] == 1)
+            {
+                $this->setSectionHomepage(true);
+            }
+            else
+            {
+                $this->setSectionHomePage(false);
+            }
             return true;
         }
         else
@@ -72,7 +81,7 @@ class Page {
 
     public function updatePage()
     {
-        $query = "UPDATE ".$this->db->getPrefix()."page SET section = '".$this->getSection()->getSectionId()."', author = '".$this->getAuthor()->getUsername()."', title = '".$this->getTitle()."', content = '".$this->getContent()."', restricted = '".$this->getRestricted()."', module = '".$this->getModule()."', navOrder = '".$this->getNavOrder()."' WHERE page_id = '".$this->getPageId()."'";
+        $query = "UPDATE ".$this->db->getPrefix()."page SET section = '".$this->getSection()->getSectionId()."', author = '".$this->getAuthor()->getUsername()."', title = '".$this->getTitle()."', content = '".$this->getContent()."', restricted = '".$this->getRestricted()."', module = '".$this->getModule()."', navOrder = '".$this->getNavOrder()."', section_homepage = '".$this->getSectionHomepage()."' WHERE page_id = '".$this->getPageId()."'";
         $result = $this->db->query($query);
         if($result)
         {
@@ -86,7 +95,27 @@ class Page {
 
     public function deletePage()
     {
-        $result = $this->db->exec("DELETE FROM ".$this->db->getPrefix()."page WHERE pageId = ".$this->getPageId());
+        if(!$this->getSectionHomepage())
+        {
+            $result = $this->db->exec("DELETE FROM ".$this->db->getPrefix()."page WHERE page_id = ".$this->getPageId());
+            if($result)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function makeThisHomepage()
+    {
+        $result = $this->getDb()->query("UPDATE page SET section_homepage = 0 WHERE section = '".$this->getSection()->getSectionId()."'");
         if($result)
         {
             return true;
@@ -100,6 +129,22 @@ class Page {
     //
     //GETTERS/SETTERS
     //
+
+    /**
+     * @param mixed $sectionHomepage
+     */
+    public function setSectionHomepage($sectionHomepage)
+    {
+        $this->sectionHomepage = $sectionHomepage;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSectionHomepage()
+    {
+        return $this->sectionHomepage;
+    }
 
     /**
      * @param mixed $db

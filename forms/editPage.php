@@ -27,6 +27,29 @@
             </div>
             <div class="form-group">
                 <label for="page_restricted">Restrict Access to this Page? <input name="page_restricted" type="checkbox" <?php if(isset($page)){ if($page->getRestricted()){ echo "checked"; }}?>> </label>
+                <?php
+                    if(isset($page))
+                    {
+                        if($page->getSectionHomepage())
+                        {
+                         ?>
+                            <br />This page is currently the Section Homepage. To change this, please go to another page to make it the Homepage
+                         <?php
+                        }
+                        else
+                        {
+                            ?>
+                            <br /><label for="homepage">Make this Page the Homepage for this Section? <input name="page_homepage" type="checkbox"/></label>
+                            <?php
+                        }
+                    }
+                    else
+                    {
+                    ?>
+                        <br /><label for="homepage">Make this Page the Homepage for this Section? <input name="page_homepage" type="checkbox"/></label>
+                    <?php
+                    }
+                ?>
             </div>
             <?php
                 if(strcmp($_GET['mode'],"create") == 0)

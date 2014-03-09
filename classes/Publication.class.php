@@ -16,6 +16,9 @@ class Publication
     private $timestamp;
     private $abstract;
     private $uploaded;
+    private $link;
+    private $publisher;
+    private $publishedIn;
 
     private $authors;
     private $projects;
@@ -30,10 +33,53 @@ class Publication
 
     public function createPublication()
     {
-        $result = $this->getDb()->query("INSERT INTO publication (name,year,abstract,file) VALUES ('".$this->getName()."','".$this->getYear()."','".$this->getAbstract()."','".$this->getFile()."')");
+        $result = $this->getDb()->query("INSERT INTO publication (name,year,abstract,publishedIn,publisher,file) VALUES ('".$this->getName()."','".$this->getYear()."','".$this->getAbstract()."','".$this->getPublishedIn()."','".$this->getPublisher()."','".$this->getLink()."')");
         if($result)
         {
-            $this->setId($this->getDb()->lastInsertId());
+            $this->setId($this->getDb()->getDb()->lastInsertId());
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function getPublication()
+    {
+        $result = $this->getDb()->query("SELECT * FROM publication WHERE publicationId = '".$this->getId()."'");
+        if($result)
+        {
+            $data = $result->fetch();
+            $this->setName($data['name']);
+            $this->setYear($data['year']);
+            $this->setUploaded($data['time_uploaded']);
+            $this->setAbstract($data['abstract']);
+            $this->setPublishedIn($data['publishedIn']);
+            $this->setPublisher($data['publisher']);
+            $this->setLink($data['file']);
+            //Get Authors
+
+            $authorResult = $this->getDb()->query("SELECT * FROM publication_author WHERE publicationId = '".$this->getId()."'");
+            $authors = array();
+            if($authorResult)
+            {
+                while($data = $authorResult->fetch())
+                {
+                    if(strlen($data['username']) > 0)
+                    {
+                        $author = new User($this->getDb(),$data['username']);
+                        $author->getUser();
+                        $author->getProfile();
+                        $authors[] = $author;
+                    }
+                    else
+                    {
+                        $authors[] = $data['nameOfAuthor'];
+                    }
+                }
+            }
+            $this->setAuthors($authors);
             return true;
         }
         else
@@ -55,10 +101,65 @@ class Publication
         }
     }
 
+    public function doCleanUp()
+    {
+        $result = $this->getDb()->query("DELETE FROM publication_author WHERE publicationId = '".$this->getId()."'");
+        $result2 = $this->getDb()->query("DELETE FROM publication_project WHERE publicationId = '".$this->getId()."'");
+        $result3 = $this->getDb()->query("DELETE FROM publication_download WHERE publicationId = '".$this->getId()."'");
+        if($result && $result2 && $result3)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public function deletePublication()
     {
+        $this->doCleanUp();
         $result = $this->getDb()->query("DELETE FROM publication WHERE publicationId = '".$this->getId()."'");
         if($result)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function addIlabAuthor($username)
+    {
+        $result = $this->getDb()->query("INSERT INTO publication_author (publicationId,username,nameOfAuthor) VALUES ('".$this->getId()."','".$username."',NULL)");
+        if($result)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function addAuthor($name)
+    {
+        $result = $this->getDb()->query("INSERT INTO publication_author (publicationId,username,nameOfAuthor) VALUES ('".$this->getId()."',NULL,'".$name.")");
+        if($result)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function checkIfAuthor($username)
+    {
+        $result = $this->getDb()->query("SELECT * FROM publication_author WHERE username = '".$username."'");
+        if($result->rowCount() > 0)
         {
             return true;
         }
@@ -195,6 +296,56 @@ class Publication
     {
         return $this->year;
     }
+
+    /**
+     * @param mixed $link
+     */
+    public function setLink($link)
+    {
+        $this->link = $link;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLink()
+    {
+        return $this->link;
+    }
+
+    /**
+     * @param mixed $publishedIn
+     */
+    public function setPublishedIn($publishedIn)
+    {
+        $this->publishedIn = $publishedIn;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPublishedIn()
+    {
+        return $this->publishedIn;
+    }
+
+    /**
+     * @param mixed $publisher
+     */
+    public function setPublisher($publisher)
+    {
+        $this->publisher = $publisher;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPublisher()
+    {
+        return $this->publisher;
+    }
+
+
 
     //Database
 
