@@ -135,6 +135,19 @@ class user {
         $this->setPassword(md5($this->getSalt()."".$newPassword));
     }
 
+    public function createAccessCookie($accessKey)
+    {
+        $result = $this->getDb()->query("INSERT INTO cookie (username,keycode) VALUES ('".$this->getUsername()."','".$accessKey."')");
+        if($result)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     //Getters and Setters
     /**
      * @param mixed $access_level

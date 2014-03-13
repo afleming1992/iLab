@@ -7,7 +7,7 @@
           <span class='icon-bar'></span>
           <span class='icon-bar'></span>
         </button>
-        <a class='navbar-brand' href='index.php'><img src='images/logo.png' height='55px'/></a>
+        <a class='navbar-brand' href='index.php'><img src='images/logo.png' height='80px'/></a>
       </div>
       <div class="collapse navbar-collapse navbar-ex1-collapse" id="bs-example-navbar-collapse-1">
         <ul class='nav navbar-nav'>
@@ -21,7 +21,7 @@
             {
         ?>
             <div class="btn-group visible-md visible-lg" style='float:right;'>
-                <button id="navbar_profile" type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" style='padding:5px'">
+                <button id="navbar_profile" type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" style='padding:5px;height:85px;width:85px;'">
                    <?php
                         $user = new Profile($this->db,$_SESSION['username']);
                         $user->getProfile();
@@ -31,11 +31,11 @@
                             $photo = 'images/profile/'.$user->getPhoto();
                         }
                     ?>
-                    <img src="<?php if(file_exists($photo)){ echo $photo; }else{ echo "images/test-profile.jpg";} ?>" class="crop img-thumbnail" style="max-width='50px';max-height='50px';margin:0"; /> <span class="caret"></span>
+                    <img src="<?php if(file_exists($photo)){ echo $photo; }else{ echo "images/test-profile.jpg";} ?>" class="crop img-thumbnail" style="max-width='80px';max-height='80px';margin:0"; /> <span class="caret"></span>
                 </button>
                     <ul class="dropdown-menu" role="menu">
                         <li role="presentation" class="dropdown-header">Quick Access</li>
-                        <li><a href="#">My Profile</a></li>
+                        <li><a href="?mode=profile&user=<?php echo $_SESSION['username']; ?>">My Profile</a></li>
                         <li><a href="#">My Publications</a></li>
                         <li class="divider"></li>
                         <?php
@@ -58,7 +58,7 @@
             else
             {
         ?>
-        <button id='navbar_profile' type="button" class="btn btn-primary dropdown-toggle" data-toggle="modal" data-target="#loginModal" style='float:right;'>
+        <button id='navbar_profile' type="button" class="btn btn-primary visible-lg visible-md dropdown-toggle" data-toggle="modal" data-target="#loginModal" style='float:right;'>
             Login <span class='glyphicon glyphicon-lock'></span>
         </button>
         <?php

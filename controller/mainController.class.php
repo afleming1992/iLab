@@ -25,9 +25,32 @@
                 $_SESSION['login'] = true;
                 $_SESSION['username'] = $user->getUsername();
                 $_SESSION['access_level'] = $user->getAccessLevel();
+                if($_POST['remember'])
+                {
+                    $string = $_SESSION['username']."-".date("c");
+                    $accessKey = md5($string);
+                    //Sets a cookie to expire in a year
+                    $year = time()+60*60*24*365;
+                    setcookie("access_key",$accessKey,$year);
+                    $user->createAccessCookie($accessKey);
+                }
                 $this->loadLoginSuccessful();
             } else {
                 $this->loadLoginFailure($username);
+            }
+        }
+
+        public function checkCookie($access_key)
+        {
+            $result = $this->getDb()->query("SELECT username FROM cookie WHERE keycode = '".$access_key."'");
+            if($result)
+            {
+                $row = $result->fetch();
+                return $row['username'];
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -267,6 +290,7 @@
                 $this->loadPageHeader();
                 $sideNav = $this->getNavController()->loadSideNavigation(4);
                 $adminSection = $this->getNavController()->loadPageAdmin("publication",$id);
+                $projects = $publication->getProjects();
                 include("content/viewPublication.php");
                 $this->loadFooter();
             }
@@ -382,7 +406,6 @@
             $user->getProfile()->setRole($role);
             $user->getProfile()->setWebsite($website);
             $user->getProfile()->setBio(htmlspecialchars($bio, ENT_QUOTES));
-            $user->getProfile()->setPureId($pureId);
             $user->getProfile()->setTwitter($twitter);
             $user->getProfile()->setScholar($scholar);
             $user->getProfile()->setLinkedIn($linkedin);
@@ -404,7 +427,7 @@
                 if ($admin == 1) {
                     $this->loadAdminPage("userList");
                 } else {
-                    $this->loadUpdateStatus("<div class='alert alert-success'>Your Account has been updated!</div>");
+                    $this->loadProfile($user->getUserName());
                 }
             }
         }
@@ -443,7 +466,7 @@
             $sponsors = array();
             $project = new Project ($this->getDb(), $projectId);
             if ($project->getProject()) {
-                $sponsors = $project->findSponsorsAndPartners();
+                $sponsors = $project->findPartners();
                 $fullSponsorList = $this->getAllSponsors();
                 if ($_SESSION['access_level'] > 0 || $project->checkIfAdmin($_SESSION['username'])) {
                     $this->loadPageHeader();
@@ -556,12 +579,33 @@
             $publication = new Publication($this->getDb(),$id);
             if($publication->getPublication())
             {
-
+                include("forms/editPublication.php");
             }
             else
             {
                 $this->contentNotFound();
             }
+            $this->loadFooter();
+        }
+
+        public function loadProfile($user)
+        {
+            $this->loadPageHeader();
+            $profile = new Profile($this->getDb(),$user);
+            if($profile->getProfile())
+            {
+                $sideNav = $this->getNavController()->loadSideNavigation(2);
+                if($user == $_SESSION['username'] || $this->checkLoginandAccess(2))
+                {
+                    $adminSection = $this->getNavController()->loadPageAdmin("profile",$user);
+                }
+                include("content/viewProfile.php");
+            }
+            else
+            {
+                $this->loadUpdateStatus("<div class='alert alert-danger'>Couldn't find Profile</div>");
+            }
+            $this->loadFooter();
         }
 
         public function loadEditUser($mode, $username)
@@ -740,12 +784,52 @@
             }
         }
 
+        public function loadAuthorList($pub_id)
+        {
+            $publication = new Publication($this->getDb(),$pub_id);
+            if($publication->getPublication())
+            {
+                $authors = $publication->getAuthors();
+                $ilabUsers = $publication->getNonAuthors();
+                if($this->checkLoginandAccess(1) || $publication->checkIfAuthor($_SESSION['username']))
+                {
+                    $this->loadPageHeader();
+                    include('content/manageAuthors.php');
+                    $this->loadFooter();
+                }
+                else
+                {
+                    $this->loadAccessDenied();
+                }
+            }
+        }
+
+        public function loadPubProjectList($pub_id)
+        {
+            $publication = new Publication($this->getDb(),$pub_id);
+            if($publication->getPublication())
+            {
+                $projects = $publication->getProjects();
+                $nonProjects = $publication->getNonProjects();
+                if($this->checkLoginandAccess(1) || $publication->checkIfAuthor($_SESSION['username']))
+                {
+                    $this->loadPageHeader();
+                    include('content/managePublicationProjects.php');
+                    $this->loadFooter();
+                }
+                else
+                {
+                    $this->loadAccessDenied();
+                }
+            }
+        }
+
         public function upload($file, $directory, $fileName)
         {
             $allowedExts = array("gif", "jpeg", "jpg", "png", "pdf");
             $temp = explode(".", $file["name"]);
             $extension = end($temp);
-            if (($file["size"] < 1000000) && in_array($extension, $allowedExts)) {
+            if (($file["size"] < 100000000) && in_array($extension, $allowedExts)) {
                 if ($file["error"] > 0) {
                     echo "Return Code: " . $file["error"] . "<br>";
                 } else {
@@ -753,11 +837,11 @@
                     //echo "Type: " . $_FILES["profile_photo"]["type"] . "<br>";
                     //echo "Size: " . ($_FILES["profile_photo"]["size"] / 1024) . " kB<br>";
                     //echo "Temp file: " . $_FILES["profile_photo"]["tmp_name"] . "<br>";
-                    move_uploaded_file($file["tmp_name"], $directory . $fileName);
+                    move_uploaded_file($file["tmp_name"], $directory.$fileName);
                     return($directory.$fileName);
                 }
             } else {
-                echo "Invalid file";
+                echo "Invalid file ".$file["size"];
             }
         }
 

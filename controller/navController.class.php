@@ -165,19 +165,36 @@ class navController {
             if(strlen($id) > 0)
             {
                 $adminNav .= "<li><a href='?mode=edit&type=project&id=".$id."'><span class='glyphicon glyphicon-pencil'></span> Edit This Project</a></li>";
-                $adminNav .= "<li><a href='?mode=manage&type=sponsor&id=".$id."'>Manage Sponsor/Partner</a></li>";
-                $adminNav .= "<li><a href='?mode=manage&type=collaborator&id=".$id."'>Manage Collaborators</a></li>";
+                $adminNav .= "<li><a href='?mode=manage&type=sponsor&id=".$id."'>Add Partners</a></li>";
+                $adminNav .= "<li><a href='?mode=manage&type=collaborator&id=".$id."'>Add People</a></li>";
             }
             else
             {
                 $adminNav .= "<li><a href='?mode=create&type=project'><span class='glyphicon glyphicon-plus'></span> Create New Project</a></li>";
             }
         }
+        else if($mode == "profile")
+        {
+            if(isset($_SESSION['access_level']))
+            {
+                if($_SESSION['access_level'] == 2)
+                {
+                    $adminNav .= "<li><a href='?mode=admin&action=editUser&id=".$id."'><span class='glyphicon glyphicon-pencil'></span> Edit Profile</a></li>";
+                }
+                else
+                {
+                    $adminNav .= "<li><a href='?mode=edit&type=user'><span class='glyphicon glyphicon-pencil'></span> Edit Profile</a></li>";
+                }
+            }
+        }
         else if($mode == "publication")
         {
             if(strlen($id) > 0)
             {
-                $adminNav .= "<li><a href='?mode=edit&type=publication&id=".$id."'><span class='glyphicon glyphicon-pencil'></span> Edit this Publication</a></li>";
+                $adminNav .= "<li><a href='?mode=edit&type=publication&id=".$id."'><span class='glyphicon glyphicon-pencil'></span> Edit Publication</a></li>";
+                $adminNav .= "<li><a href='?mode=manage&type=author&id=".$id."'><span class='glyphicon glyphicon-user'></span> Add Authors</a></li>";
+                $adminNav .= "<li><a href='?mode=manage&type=pub_project&id=".$id."'><span class='glyphicon glyphicon-folder-open'></span> Link to Projects</a></li>";
+                $adminNav .= "<li><a href='' data-toggle='modal' data-target='#stats'><span class='glyphicon glyphicon-stats'></span> View Publication Stats</a></li>";
                 $adminNav .= "<li><a href='' data-toggle='modal' data-target='#delete'><span class='glyphicon glyphicon-trash'></span> Delete Publication</a></li>";
             }
             else

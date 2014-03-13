@@ -52,7 +52,7 @@
 </div>
 <script>
     $(document).ready(function() {
-        $("#results").load("ajax/getPublicationList.php", {'page':0}, function() {$("#1-pagination-li").addClass('active');});  //initial page number to load
+        $("#results").load("ajax/getPublicationList.php", {'page':0,'numberPerPage':10}, function() {$("#1-pagination-li").addClass('active');}).slideDown(4000);  //initial page number to load
 
         $(".paginate_click").click(function (e) {
             var limit = <?php echo $pages ?>;

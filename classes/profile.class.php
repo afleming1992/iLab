@@ -70,7 +70,7 @@ class profile
 
     public function updateProfile()
     {
-        $result = $this->db->query("UPDATE ".$this->db->getPrefix()."profile SET real_name = '".$this->getRealName()."', email = '".$this->getEmail()."', website = '".$this->getWebsite()."', bio = '".$this->getBio()."', pure_id = '".$this->getPureId()."', linkedin = '".$this->getLinkedin()."', twitter = '".$this->getTwitter()."', scholar = '".$this->getScholar()."', photo = '".$this->getPhoto()."', role = '".$this->getRole()."' WHERE username = '".$this->getUsername()."'");
+        $result = $this->db->query("UPDATE ".$this->db->getPrefix()."profile SET real_name = '".$this->getRealName()."', email = '".$this->getEmail()."', website = '".$this->getWebsite()."', bio = '".$this->getBio()."', linkedin = '".$this->getLinkedin()."', twitter = '".$this->getTwitter()."', scholar = '".$this->getScholar()."', photo = '".$this->getPhoto()."', role = '".$this->getRole()."' WHERE username = '".$this->getUsername()."'");
         if($result)
         {
             return true;
@@ -272,7 +272,7 @@ class profile
 
     public function generateProfileLink()
     {
-       $link = "<a href='#'><img id='".$this->getUsername()."_tooltip' class='img-thumbnail profile' style='max-width:75px;max-height:75px;' src='".$this->getFullPhoto()."' data-toggle='tooltip' title='<b>".$this->getRealName()."</b><br /><em>".$this->getRole()."</em>' /></a>";
+       $link = "<a href='?mode=profile&user=".$this->getUsername()."'><img id='".$this->getUsername()."_tooltip' class='img-thumbnail profile' style='max-width:75px;max-height:75px;' src='".$this->getFullPhoto()."' data-toggle='tooltip' title='<b>".$this->getRealName()."</b><br /><em>".$this->getRole()."</em>' /></a>";
        return $link;
     }
 

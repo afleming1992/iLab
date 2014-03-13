@@ -3,7 +3,7 @@
     include("../classes/Database.class.php");
 
     $db = new Database($server, $database, $user, $password, $table_prefix);
-    $item_per_page = 5;
+    $item_per_page = $_POST['numberPerPage'];
 
 //sanitize post value
     $page_number = filter_var($_POST["page"], FILTER_SANITIZE_NUMBER_INT, FILTER_FLAG_STRIP_HIGH);
@@ -15,8 +15,27 @@
     $position = ($page_number * $item_per_page);
 
 //Limit our results within a specified range.
+    $queryArray = array();
 
-    $results = $db->query("SELECT * FROM publication ORDER BY year DESC LIMIT ".$position.", ".$item_per_page);
+    $projectFilter = "";
+    if(isset($_POST['project']))
+    {
+        $projectFilter = "publicationId IN (SELECT publicationId FROM publication_project WHERE projectId = '".$_POST['projectId']."')";
+    }
+
+    $authorFilter = "";
+    if(isset($_POST['author']))
+    {
+        $authorFilter = "AND publicationId IN (SELECT publicationId FROM publication_author WHERE username = '".$_POST['author']."')";
+    }
+
+    $where = "";
+    if(strlen($projectFilter) > 0 || strlen($authorFilter) > 0)
+    {
+        $where = "WHERE ".$projectFilter.$authorFilter;
+    }
+
+    $results = $db->query("SELECT * FROM publication ".$where." ORDER BY year DESC LIMIT ".$position.", ".$item_per_page);
 
 //output results from database
     while($row = $results->fetch())

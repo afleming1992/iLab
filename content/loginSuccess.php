@@ -7,7 +7,7 @@
             <div class="panel-body">
                 <h4>Great! You're now logged in! Click below to go to your Profile!</h4>
                 <br />
-                <a class="btn btn-primary">Go to my Profile</a>
+                <a href="?mode=profile&user=<?php echo $_SESSION['username'] ?>" class="btn btn-primary">Go to my Profile</a>
                 <?php
                     if($_POST['bounce'] == 1)
                     {

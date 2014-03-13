@@ -9,6 +9,7 @@
     <script src="js/bootstrap.js" /></script>
     <script src="jquery-ui/js/jquery-ui.custom.min.js"></script>
     <script type="text/javascript" src="js/tinymce/tinymce.min.js"></script>
+    <script src="js/Chart.js"></script>
     <script type="text/javascript">
        tinymce.init({
        selector: "textarea#tinymce",

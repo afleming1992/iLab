@@ -64,7 +64,9 @@
     <div class='col-md-4'>
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Our Team</h3>
+                <h3 class="panel-title">
+                    Who we are
+                </h3>
             </div>
             <div class="panel-body">
                 <a href="#" ><img src="images/test-profile.jpg" class="img-thumbnail" width="85px" height="85px"/></a>
@@ -78,7 +80,7 @@
     <div class='col-md-4'>
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title"> Upcoming Events</h3>
+                <h3 class="panel-title">Current Projects</h3>
             </div>
             <div class="panel-body">
 

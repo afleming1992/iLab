@@ -67,8 +67,7 @@ class Project {
             $this->setEndDate($data['endDate']);
             $this->setLogo($data['logo']);
             $this->setContributors($this->findContributors());
-            $this->findPartners();
-            $this->findSponsors();
+            $this->setSponsors($this->findPartners());
             return true;
         }
         else
@@ -125,7 +124,7 @@ class Project {
         return false; //Subject not Found
     }
 
-    public function findSponsorsAndPartners()
+    public function findPartners()
     {
         $sponsors = array();
         $result = $this->getDb()->query("SELECT * FROM project_sponsor WHERE projectId = '".$this->getId()."'");
@@ -136,50 +135,10 @@ class Project {
                 $sponsor = array();
                 $sponsor["sponsor"] = new Sponsor($this->getDb(),$data['sponsorId']);
                 $sponsor["sponsor"]->getSponsor();
-                if($data['type'] == "sponsor")
-                {
-                    $sponsor['type'] = "sponsor";
-                }
-                else
-                {
-                    $sponsor['type'] = "partner";
-                }
                 $sponsors[] = $sponsor;
             }
         }
         return $sponsors;
-    }
-
-    public function findSponsors()
-    {
-        $sponsors = array();
-        $result = $this->getDb()->query("SELECT * FROM project_sponsor WHERE projectId = '".$this->getId()."' AND type = 'sponsor'");
-        if($result)
-        {
-            while($data = $result->fetch())
-            {
-                    $sponsor = new Sponsor($this->getDb(),$data['sponsorId']);
-                    $sponsor->getSponsor();
-                    $sponsors[] = $sponsor;
-            }
-        }
-        $this->setSponsors($sponsors);
-    }
-
-    public function findPartners()
-    {
-        $partners = array();
-        $result = $this->getDb()->query("SELECT * FROM project_sponsor WHERE projectId = '".$this->getId()."' AND type = 'partner'");
-        if($result)
-        {
-            while($data = $result->fetch())
-            {
-                $partner = new Sponsor($this->getDb(),$data['sponsorId']);
-                $partner->getSponsor();
-                $partners[] = $partner;
-            }
-        }
-        $this->setPartners($partners);
     }
 
     public function addCollaborator($username,$admin,$hidden)
@@ -193,6 +152,24 @@ class Project {
         {
             return false;
         }
+    }
+
+    public function findPublications()
+    {
+        $result = $this->getDb()->query("SELECT * FROM publication_project WHERE projectId = '".$this->getId()."'");
+        $publications = array();
+        if($result)
+        {
+            while($data = $result->fetch())
+            {
+                $publication = new Publication($this->getDb(),$data['publicationId']);
+                if($publication->getPublication())
+                {
+                    $publications[] = $publication;
+                }
+            }
+        }
+        return $publications;
     }
 
     public function removeCollaborator($username)
@@ -403,9 +380,10 @@ class Project {
         }
     }
 
-    public function generateProfileLink()
+    public function generateLink()
     {
         $photo = $this->getFullLogo();
-        $link = "<a href=''><img src='".$photo."' /></a><script></script>";
+        $link = "<a href='?mode=project&id=".$this->getId()."'><img class='img-thumbnail profile' style='max-width:100px; max-height:100px;' src='".$photo."' /></a><script></script>";
+        return $link;
     }
 } 

@@ -7,6 +7,11 @@
         <label for="login_password">Password</label>
         <input type="password" class="form-control" id="login_password" name="login_password" placeholder="Password">
     </div>
+    <div class="form-group">
+        <label>
+            Remember me <input type="checkbox" name="remember" value="1" />
+        </label>
+    </div>
     <input type="hidden" name="login" value="1" />
     <?php
         if($verification)

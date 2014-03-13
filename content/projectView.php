@@ -10,15 +10,15 @@
               ?>
               <div class='media sponsor'>
                   <a class='pull-left'>
-                      <img style='max-width:50px;max-height:50px;' class='media-object' src='<?php echo $sponsor->getFullLogo(); ?>'>
+                      <img style='max-width:50px;max-height:50px;' class='media-object' src='<?php echo $sponsor['sponsor']->getFullLogo(); ?>'>
                   </a>
                   <div class='media-body'>
-                      <h5 class='media-heading'><?php echo $sponsor->getName(); ?></h5>
+                      <h5 class='media-heading'><?php echo $sponsor['sponsor']->getName(); ?></h5>
                       <?php
-                        if(strlen($sponsor->getWebsite()) > 0)
+                        if(strlen($sponsor['sponsor']->getWebsite()) > 0)
                         {
                             ?>
-                            <a class='btn btn-info btn-xs' href='<?php echo $sponsor->getWebsite(); ?>'><span class='glyphicon glyphicon-globe'></span> Website</a>
+                            <a class='btn btn-info btn-xs' href='<?php echo $sponsor['sponsor']->getWebsite(); ?>'><span class='glyphicon glyphicon-globe'></span> Website</a>
                             <?php
                         }
                         ?>
@@ -126,7 +126,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="panel panel-default">
                              <div class="panel-heading">
                                   <h4 class="panel-title">Publications</h4>
@@ -136,26 +136,14 @@
                              </div>
                          </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">Sponsors</h4>
-                            </div>
-                            <div class="panel-body">
-                                <?php
-                                    printSponsors($project->getSponsors());
-                                ?>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title">Partners</h4>
                             </div>
                             <div class="panel-body">
                                 <?php
-                                   printSponsors($project->getPartners());
+                                    printSponsors($project->findPartners());
                                 ?>
                             </div>
                         </div>

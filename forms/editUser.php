@@ -119,10 +119,6 @@
                     <textarea id="tinymce" id="profile_bio" name="profile_bio"><?php echo $user->getProfile()->getBio(); ?></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="profile_pure">Research Gateway ID</label>
-                    <input type="text" class="form-control" name="profile_pure" id="profile_pure" value="<?php echo $user->getProfile()->getPureId(); ?>"/>
-                </div>
-                <div class="form-group">
                     <label for="profile_twitter">Twitter Username</label>
                     <div class="input-group">
                         <span class="input-group-addon">@</span>

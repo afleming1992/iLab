@@ -15,7 +15,23 @@
         unset($_SESSION['username']);
         unset($_SESSION['access_level']);
         unset($_SESSION['login']);
+
+        unset($_COOKIE['access_key']);
+        setcookie('access_key',time()-3600);
         $loggedout = 1;
+    }
+
+    if(!isset($_SESSION['username']) && isset($_COOKIE['access_key']))
+    {
+        $username = $app->checkCookie($_COOKIE['access_key']);
+        if($username != false)
+        {
+            $user = new User($db,$username);
+            $user->getUser();
+            $_SESSION['login'] = true;
+            $_SESSION['username'] = $user->getUsername();
+            $_SESSION['access_level'] = $user->getAccessLevel();
+        }
     }
 
     //Form Handling
@@ -98,7 +114,7 @@
     {
         if($_POST['file_choice'] == "file")
         {
-            $location = upload($_FILES['publication_file'],"uploads/publications/",$_FILES['publication_file']['name']);
+            $location = $app->upload($_FILES['publication_file'],"uploads/publications/",$_FILES['publication_file']['name']);
         }
         else if($_POST['file_choice'] == "link")
         {
@@ -109,6 +125,91 @@
             $location = "";
         }
         $app->createPublication($_POST['publication_title'],$_POST['publication_publishedIn'],$_POST['publication_publisher'],$_POST['publication_abstract'],$_POST['publication_year'],$location);
+        exit();
+    }
+
+    if(isset($_POST['editPublication']))
+    {
+        if($_POST['file_choice'] == "yes")
+        {
+            $location = $app->upload($_FILES['publication_file'],"uploads/publications/",$_FILES['publication_file']['name']);
+        }
+        else
+        {
+            $location = $_POST['link'];
+        }
+
+        $publication = new Publication($db,$_POST['publicationId']);
+        if($publication->getPublication())
+        {
+            $publication->setName(htmlentities($_POST['title'],ENT_QUOTES));
+            $publication->setPublishedIn(htmlentities($_POST['publishedIn'],ENT_QUOTES));
+            $publication->setPublisher(htmlentities($_POST['publisher'],ENT_QUOTES));
+            $publication->setYear($_POST['year']);
+            $publication->setAbstract(htmlentities($_POST['abstract'],ENT_QUOTES));
+            $publication->setLink($location);
+            if($publication->updatePublication())
+            {
+                $app->loadPublication($publication->getId());
+                exit();
+            }
+            else
+            {
+                $app->loadUpdateStatus("<div class='alert alert-danger'>Couldn't Update Publication</div>");
+            }
+        }
+    }
+
+    if(isset($_POST['addPubProject']))
+    {
+        $publication = new Publication($db,$_POST['publicationId']);
+        if($publication->getPublication())
+        {
+            if($publication->addProject($_POST['project']))
+            {
+                $app->loadPubProjectList($_POST['publicationId']);
+                exit();
+            }
+        }
+        else
+        {
+            $app->loadUpdateStatus("<div class='alert alert-danger'>Couldn't find Publication</div>");
+            exit();
+        }
+    }
+
+    if(isset($_POST['addAuthor']))
+    {
+        $publication = new Publication($db,$_POST['publicationId']);
+        if($publication->getPublication())
+        {
+            if($_POST['author_choice'] == "yes")
+            {
+                if($publication->addIlabAuthor($_POST['ilab_author']))
+                {
+                    $app->loadAuthorList($_POST['publicationId']);
+                }
+                else
+                {
+                    $app->loadUpdateStatus("<div class='alert alert-danger'>Couldn't add Author</div>");
+                }
+            }
+            else
+            {
+                if($publication->addAuthor($_POST['non_author']))
+                {
+                    $app->loadAuthorList($_POST['publicationId']);
+                }
+                else
+                {
+                    $app->loadUpdateStatus("<div class='alert alert-danger'>Couldn't add Author for some reason</div>");
+                }
+            }
+        }
+        else
+        {
+            $app->pageNotFound();
+        }
         exit();
     }
 
@@ -130,6 +231,11 @@
         {
             //View Standard Content Page Mode
             $app->loadContentPage($_GET['id']);
+            exit();
+        }
+        if(strcmp($mode,"profile") == 0)
+        {
+            $app->loadProfile($_GET['user']);
             exit();
         }
         if(strcmp($mode,"project") == 0)
@@ -174,6 +280,14 @@
                 else if(strcmp($_GET['type'],"collaborator") == 0)
                 {
                     $app->loadCollaboratorsList($_GET['id']);
+                }
+                else if(strcmp($_GET['type'],"author") == 0)
+                {
+                    $app->loadAuthorList($_GET['id']);
+                }
+                else if(strcmp($_GET['type'],"pub_project") == 0)
+                {
+                    $app->loadPubProjectList($_GET['id']);
                 }
                 else
                 {
@@ -284,6 +398,35 @@
                 {
                     $app->loadUpdateStatus("<div class='alert alert-danger'>The System was unable to delete the page! Here is what could of happened:- <ul><li>The Page was a Section Homepage and therefore couldn't be deleted</li><li>There may have been a database error!</li><li>The page has been deleted already</li></ul></div>");
                 }
+            }
+            else if($_GET['type'] == "author")
+            {
+                $result = $db->query("DELETE FROM ".$db->getPrefix()."publication_author WHERE authorId = '".$_GET['id']."'");
+                if($result)
+                {
+                    $app->loadAuthorList($_GET['pubId']);
+                }
+                else
+                {
+                    $app->loadUpdateStatus("<div class='alert alert-danger'>Couldn't remove Author</div>");
+                }
+            }
+            else if($_GET['type'] == "pub_project")
+            {
+                $publication = new Publication($db,$_GET['pub_id']);
+                if($publication->removeProject($_GET['id']))
+                {
+                    $app->loadPubProjectList($_GET['pub_id']);
+                }
+                else
+                {
+                    $app->loadUpdateStatus("<div class='alert alert-danger'>Couldn't remove the Project</div>");
+                }
+                exit();
+            }
+            else
+            {
+                $app->pageNotFound();
             }
         }
         else if(strcmp($mode,"admin") == 0)
