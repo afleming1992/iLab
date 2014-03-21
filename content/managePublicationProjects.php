@@ -1,6 +1,6 @@
 <div class="panel panel-success">
     <div class="panel-heading">
-        <h3 class="panel-title">Project Management for <?php echo $publication->getName(); ?></h3>
+        <h3 class="panel-title">Link projects to <?php echo $publication->getName(); ?></h3>
     </div>
     <div class="panel-body">
         <?php

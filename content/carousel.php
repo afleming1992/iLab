@@ -10,11 +10,12 @@
     <div class="item active">
       <img src="images/carousel1.png" />
       <div class="carousel-caption">
-        Testing
+        <h3>Our Team</h3>
+        <p>Click here to find out more about our Team!</p>
       </div>
     </div>
     <div class="item">
-        <img style="width:624px;"src="images/test_image.jpg" />
+        <img style="width:624px;"src="images/carousel2.png" />
     </div>
   </div>
 

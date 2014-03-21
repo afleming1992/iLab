@@ -126,6 +126,26 @@ class Page {
         }
     }
 
+    public function redirectToPage()
+    {
+        if(strlen($this->getNavOveride()) > 0)
+        {
+            ?>
+            <script>
+                window.location = "index.php<?php echo $this->getNavOveride(); ?>"
+            </script>
+            <?php
+        }
+        else
+        {
+            ?>
+                <script>
+                    window.location = "index.php?mode=content&id=<?php echo $this->getPageId(); ?>"
+                </script>
+            <?php
+        }
+    }
+
     //
     //GETTERS/SETTERS
     //

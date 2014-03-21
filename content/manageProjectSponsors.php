@@ -79,7 +79,7 @@
                                         foreach($sponsors as $sponsor)
                                         {
                                             ?>
-                                                <tr><td><img src="<?php echo $sponsor["sponsor"]->getFullLogo(); ?>" style="max-width:100px;max-height:100px;"/></td><td><?php echo $sponsor["sponsor"]->getName(); ?></td><td><a href="?mode=changeSponsorType&sponsorId=<?php echo $sponsor['sponsor']->getId(); ?>&projectId=<?php echo $project->getId(); ?>" alt="Switch type" class="btn btn-info btn-sm"><span class="glyphicon glyphicon-refresh"></span></a><a href="?mode=edit&type=sponsor&id=<?php echo $sponsor['sponsor']->getId(); ?>&project=<?php echo $_GET['id']; ?>" class="btn btn-sm btn-warning"><span class="glyphicon glyphicon-pencil"></span></a><a href="?mode=delete&type=sponsorLink&sponsorId=<?php echo $sponsor['sponsor']->getId(); ?>&projectId=<?php echo $project->getId(); ?>" class="btn btn-danger btn-sm"><span class="
+                                                <tr><td><img src="<?php echo $sponsor["sponsor"]->getFullLogo(); ?>" style="max-width:100px;max-height:100px;"/></td><td><?php echo $sponsor["sponsor"]->getName(); ?></td><td><a href="?mode=edit&type=sponsor&id=<?php echo $sponsor['sponsor']->getId(); ?>&project=<?php echo $_GET['id']; ?>" class="btn btn-sm btn-warning"><span class="glyphicon glyphicon-pencil"></span></a><a href="?mode=delete&type=sponsorLink&sponsorId=<?php echo $sponsor['sponsor']->getId(); ?>&projectId=<?php echo $project->getId(); ?>" class="btn btn-danger btn-sm"><span class="
 glyphicon glyphicon-remove"></span></a></td></tr>
                                             <?php
                                         }
@@ -99,7 +99,7 @@ glyphicon glyphicon-remove"></span></a></td></tr>
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Add Sponsor/Partner</h4>
+                <h4 class="modal-title" id="myModalLabel">Add Partner</h4>
             </div>
             <div class="modal-body">
                <form enctype="multipart/form-data" method="post" value="index.php" onSubmit="return validateAddForm()">
@@ -111,21 +111,12 @@ glyphicon glyphicon-remove"></span></a></td></tr>
                    <div id="new_website_control" class="form-group">
                        <label for="sponsor_website">Website</label>
                        <input class="form-control" type="text" id="sponsor_website" name="sponsor_website" />
-                   </div>
-                   <div id="new_logo_control" class="form-group">
                        <label for="sponsor_logo">Logo</label>
                        <input class="form-control" type="file" id="sponsor_logo" name="sponsor_logo" />
                    </div>
-                   <div class="form-group">
-                       <label for="sponsor_type">Type</label>
-                       <select class="form-control" name="sponsor_type">
-                           <option value="sponsor">Sponsor</option>
-                           <option value="partner">Partner</option>
-                       </select>
-                   </div>
                    <input type="hidden" name="projectId" value="<?php echo $project->getId(); ?>" />
                    <input type="hidden" name="addSponsor" value="1" />
-                   <button class="btn btn-success" type="submit">Add Sponsor/Partner</button>
+                   <button class="btn btn-success" type="submit">Add Partner</button>
                </form>
             </div>
         </div>
@@ -137,7 +128,7 @@ glyphicon glyphicon-remove"></span></a></td></tr>
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Add Existing Sponsor/Partner</h4>
+                <h4 class="modal-title" id="myModalLabel">Add Existing Partner</h4>
             </div>
             <div class="modal-body">
                 <form enctype="multipart/form-data" method="post" value="index.php">
@@ -155,7 +146,7 @@ glyphicon glyphicon-remove"></span></a></td></tr>
                     </div>
                     <input type="hidden" name="projectId" value="<?php echo $project->getId(); ?>" />
                     <input type="hidden" name="addExistingSponsor" value="1" />
-                    <button class="btn btn-success" type="submit">Add Sponsor/Partner</button>
+                    <button class="btn btn-success" type="submit">Add Partner</button>
                 </form>
             </div>
         </div>

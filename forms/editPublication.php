@@ -63,7 +63,7 @@
                     </label>
                 </div>
                 <div id="file_box" class="form-group hidden">
-                    <label>Select your File for Upload</label>
+                    <label>Select your File for Upload <em>PDF's Only!</em></label>
                     <input type="file" class="form-control" id="publication_file" name="publication_file" />
                     <p id='file_help' class="help-block"></p>
                 </div>

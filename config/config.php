@@ -16,9 +16,9 @@ if($_SERVER['SERVER_ADDR'] == "::1")
 }
 else
 {
-    $server = "localhost";
-    $database = "swfm_ilab";
-    $user = "swfm_1";
-    $password = "smallfm1992";
+    $server = "mysql17.000webhost.com";
+    $database = "a9214664_ilab";
+    $user = "a9214664_ilab";
+    $password = "SXrE8gF9";
     $table_prefix = "";
 }

@@ -12,14 +12,15 @@
     <script src="js/Chart.js"></script>
     <script type="text/javascript">
        tinymce.init({
+       
        selector: "textarea#tinymce",
        content_css: "css/bootstrap.css",
        height:"400px",
-       toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l ink image | media fullpage | forecolor backcolor",
+       toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image jbimages | media fullpage | forecolor backcolor",
            plugins: [
                "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
                "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-               "save table contextmenu directionality emoticons template paste textcolor"
+               "save table contextmenu directionality emoticons template paste textcolor jbimages"
            ],
            relative_urls: false
         });

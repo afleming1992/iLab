@@ -31,9 +31,10 @@ class Project {
 
     public function createProject()
     {
-        $result = $this->getDb->query("INSERT INTO project (name,description,website,startDate,endDate) VALUES ('".$this->getName()."','".$this->getDescription()."','".$this->getWebsite()."','".$this->getStartDate()."','".$this->getEndDate()."'");
+        $result = $this->getDb()->query("INSERT INTO project (name,description,website,startDate,endDate,logo) VALUES ('".$this->getName()."','".$this->getDescription()."','".$this->getWebsite()."','".$this->getStartDate()."','".$this->getEndDate()."','".$this->getLogo()."')");
         if($result)
         {
+            $this->setId($this->getDb()->getDb()->lastInsertId());
             return true;
         }
         else
@@ -74,6 +75,27 @@ class Project {
         {
             return false;
         }
+    }
+
+    public function deleteProject()
+    {
+        $result = $this->getDb()->query("DELETE FROM project WHERE projectId = '".$this->getId()."'");
+        if($result)
+        {
+            $this->cleanUp();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function cleanUp()
+    {
+        $this->getDb()->query("DELETE FROM project_collaborator WHERE projectId = '".$this->getId()."'");
+        $this->getDb()->query("DELETE FROM project_sponsor WHERE projectId = '".$this->getId()."'");
+        $this->getDb()->query("DELETE FROM publication_project WHERE projectId = '".$this->getId()."'");
     }
 
     public function findContributors()
@@ -383,7 +405,7 @@ class Project {
     public function generateLink()
     {
         $photo = $this->getFullLogo();
-        $link = "<a href='?mode=project&id=".$this->getId()."'><img class='img-thumbnail profile' style='max-width:100px; max-height:100px;' src='".$photo."' /></a><script></script>";
+        $link = "<a href='?mode=project&id=".$this->getId()."'><img class='img-thumbnail profile' style='max-width:200px; max-height:200px;' src='".$photo."' /></a><script></script>";
         return $link;
     }
 } 

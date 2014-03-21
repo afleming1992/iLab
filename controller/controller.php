@@ -37,7 +37,17 @@
     //Form Handling
     if(isset($_POST['createPage']))
     {
-        $app->createNewPage($_POST['page_title'],$_POST['page_section'],$_POST['page_content'],$_POST['page_module'],$_POST['page_restricted'],$_POST['page_homepage']);
+        $section = new Section($db,$_POST['page_section']);
+        $section->getDetails();
+        if($section->getRestricted() == 1)
+        {
+            $restricted = 1;
+        }
+        else
+        {
+            $restricted = $_POST['restricted'];
+        }
+        $app->createNewPage($_POST['page_title'],$_POST['page_section'],$_POST['page_content'],$_POST['page_module'],$restricted,$_POST['page_homepage']);
     }
 
     if(isset($_POST['editPage']))
@@ -50,7 +60,19 @@
         {
             $homepage = false;
         }
-        $message = $app->editPage($_POST['page_id'],$_POST['page_title'],$_POST['page_section'],$_POST['page_content'],$_POST['page_module'],$_POST['page_restricted'],$_POST['page_homepage']);
+
+        $section = new Section($db,$_POST['page_section']);
+        $section->getDetails();
+        if($section->getRestricted() == 1)
+        {
+            $restricted = 1;
+        }
+        else
+        {
+            $restricted = $_POST['restricted'];
+        }
+
+        $message = $app->editPage($_POST['page_id'],$_POST['page_title'],$_POST['page_section'],$_POST['page_content'],$_POST['page_module'],$restricted,$_POST['page_homepage']);
     }
 
     if(isset($_POST['addUser']))
@@ -212,7 +234,71 @@
         }
         exit();
     }
+    if(isset($_POST['createProject']))
+    {
+        $project = new Project($db,0);
+        $project->setName(htmlentities($_POST['project_name'],ENT_QUOTES));
+        $project->setDescription(htmlentities($_POST['project_description'],ENT_QUOTES));
+        $project->setWebsite($_POST['project_website']);
+        $project->setStartDate($project->normalToSql($_POST['project_startDate']));
+        $project->setEndDate($project->normalToSql($_POST['project_endDate']));
+        $fileLink = $_FILES['project_logo']['name'];
+        $app->upload($_FILES['project_logo'],"images/project/",$fileLink);
+        $project->setLogo($fileLink);
+        if($project->createProject())
+        {
+            $app->addContributorToProject($project->getId(),$_SESSION['username'],1,0);
+            $app->redirect("?mode=project&id=".$project->getId());
+        }
+        else
+        {
+            $app->loadUpdateStatus("<div class='alert alert-danger'>Project could not be added!</div>");
+        }
+    }
+    if(isset($_POST['createNews']))
+    {
+        $news = new News($db,0);
+        $news->setTitle(htmlentities($_POST['title'],ENT_QUOTES));
+        $news->setSummary(htmlentities($_POST['summary'],ENT_QUOTES));
+        $news->setContent(htmlentities($_POST['article'],ENT_QUOTES));
+        $news->setAuthor(new Profile($db,$_SESSION['username']));
+        $fileLink = $_FILES['news_image']['name'];
+        $app->upload($_FILES['news_image'],"images/news/",$fileLink);
+        $news->setImage($fileLink);
+        if($news->createNews())
+        {
+            $app->redirect("?mode=news&id=".$news->getId());
+        }
+        else
+        {
+            $app->loadUpdateStatus("<div class='alert alert-danger'>failed to add News!</div>");
+        }
+    }
+    if(isset($_POST['editNews']))
+    {
+        $news = new News($db,$_POST['newsId']);
+        if($news->getNews())
+        {
+            $news->setTitle(htmlentities($_POST['title'],ENT_QUOTES));
+            $news->setSummary(htmlentities($_POST['summary'],ENT_QUOTES));
+            $news->setContent(htmlentities($_POST['article'],ENT_QUOTES));
+            $news->setAuthor(new Profile($db,$_SESSION['username']));
+            if($_POST['image_choice'] == "yes")
+            {
+                $fileLink = $_FILES['news_image']['name'];
+                $app->upload($_FILES['news_image'],"images/news/",$fileLink);
+                $news->setImage($fileLink);
+            }
 
+            if($news->updateNews())
+            {
+                echo "Success";
+                //$app->redirect("?mode=news&id=".$news->getId());
+            }
+        }
+    }
+
+    //Page Loading
     if(isset($_GET['mode']))
     {
         $mode = $_GET['mode'];
@@ -235,8 +321,16 @@
         }
         if(strcmp($mode,"profile") == 0)
         {
-            $app->loadProfile($_GET['user']);
-            exit();
+            if(isset($_GET['user']))
+            {
+                $app->loadProfile($_GET['user']);
+                exit();
+            }
+            else
+            {
+                $app->loadStaffList();
+                exit();
+            }
         }
         if(strcmp($mode,"project") == 0)
         {
@@ -299,6 +393,17 @@
                 $app->pageNotFound();
             }
         }
+        else if(strcmp($mode,"news") == 0)
+        {
+            if(isset($_GET['id']))
+            {
+                $app->loadNews($_GET['id']);
+            }
+            else
+            {
+                $app->loadNewsList();
+            }
+        }
         else if(strcmp($mode,"login") == 0)
         {
             //Login Mode
@@ -323,6 +428,14 @@
                 else if(strcmp($_GET['type'],"publication") == 0)
                 {
                     $app->loadCreatePublication();
+                }
+                else if(strcmp($_GET['type'],"project") == 0)
+                {
+                    $app->loadCreateProject();
+                }
+                else if(strcmp($_GET['type'],"news") == 0)
+                {
+                    $app->loadCreateNews();
                 }
                 else
                 {
@@ -361,6 +474,10 @@
                 else if(strcmp($_GET['type'],"publication") == 0)
                 {
                     $app->loadEditPublication($_GET['id']);
+                }
+                else if(strcmp($_GET['type'],"news") == 0)
+                {
+                    $app->loadEditNews($_GET['id']);
                 }
             }
             else
@@ -424,16 +541,49 @@
                 }
                 exit();
             }
+            else if($_GET['type'] == "project")
+            {
+                $project = new Project($db,$_GET['id']);
+                if($project->deleteProject())
+                {
+                    $app->redirect("?mode=project");
+                    exit();
+                }
+            }
+            else if($_GET['type'] == "news")
+            {
+                $news = new News($db,$_GET['id']);
+                if($news->deleteNews())
+                {
+                    $app->redirect("?mode=news");
+                    exit();
+                }
+            }
             else
             {
                 $app->pageNotFound();
             }
+        }
+        else if(strcmp($mode,"reorder") == 0)
+        {
+            $app->reorder($_GET['id'],$_GET['direction']);
         }
         else if(strcmp($mode,"admin") == 0)
         {
             if($_GET['action'] == "editUser")
             {
               $app->loadEditUser($_GET['mode'],$_GET['id']);
+            }
+            else if($_GET['action'] == "deleteUser")
+            {
+                if($app->checkLoginandAccess(2))
+                {
+                    $user = new User($db,$_GET['id']);
+                    if($user->deleteUser())
+                    {
+                        $app->redirect("?mode=admin&action=userList");
+                    }
+                }
             }
             else
             {

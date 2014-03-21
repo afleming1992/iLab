@@ -35,14 +35,6 @@ class navController {
                         {
                             $mainNav .= "<li><a href='#' class='dropdown-toggle' data-toggle='dropdown'>".$section->getName()." <b class='caret'></b></a>";
                             $mainNav .= "<ul class='dropdown-menu'>";
-                            if(strlen($section->getHomepage()->getNavOveride()) > 0)
-                            {
-                                $mainNav .= "<li><a href='".$section->getHomepage()->getNavOveride()."'>".$section->getHomepage()->getTitle()."</a>";
-                            }
-                            else
-                            {
-                                $mainNav .= "<li><a href='?mode=content&id=".$section->getHomepage()->getPageId()."'>".$section->getHomepage()->getTitle()."</a>";
-                            }
                             $pages = $section->getPages();
                             foreach($pages as $page)
                             {
@@ -71,6 +63,7 @@ class navController {
         if($section->getDetails())
         {
             //Put the Homepage of Section at the Top;
+            /*
             if($section->getHomePage()->getPageDetails())
             {
                 if($_GET['id'] == $section->getHomepage()->getPageId())
@@ -96,7 +89,7 @@ class navController {
             else
             {
                 $sideNav .= "<li>Can't Find Homepage</li>";
-            }
+            }*/
 
             //All other Pages as and when
             $section->findPages();
@@ -127,12 +120,12 @@ class navController {
                     $ordering = "<div class='col-md-4' style='padding-left:5px; padding-right:5px;'>";
                     if($i != 0)
                     {
-                        $ordering .= "<a class='btn btn-link ordering' href='#'><span class='glyphicon glyphicon-arrow-up'></span></a>";
+                        $ordering .= "<a href='?mode=reorder&direction=up&id=".$pages[$i]->getPageId()."' class='btn btn-link ordering' href='#'><span class='glyphicon glyphicon-arrow-up'></span></a>";
                     }
 
                     if(($i + 1) != $pageCount)
                     {
-                        $ordering .= "<a class='btn btn-link ordering' href='#'><span class='glyphicon glyphicon-arrow-down'></span></a>";
+                        $ordering .= "<a href='?mode=reorder&direction=down&id=".$pages[$i]->getPageId()."' class='btn btn-link ordering' href='#'><span class='glyphicon glyphicon-arrow-down'></span></a>";
                     }
                     $ordering .= "</div>";
                 }
@@ -154,7 +147,8 @@ class navController {
 
     public function loadPageAdmin($mode,$id)
     {
-        $adminNav = "<ul class='nav nav-pills nav-stacked'>";
+        $beginning = "<ul class='nav nav-pills nav-stacked'>";
+        $adminNav = "";
         if($mode == "content")
         {
             $adminNav .= "<li><a href='?mode=create&type=page'><span class='glyphicon glyphicon-plus'></span> Create New Page</a></li><li><a href='?mode=edit&type=page&id=".$id."'><span class='glyphicon glyphicon-pencil'></span> Edit This Page</a></li>";
@@ -167,6 +161,7 @@ class navController {
                 $adminNav .= "<li><a href='?mode=edit&type=project&id=".$id."'><span class='glyphicon glyphicon-pencil'></span> Edit This Project</a></li>";
                 $adminNav .= "<li><a href='?mode=manage&type=sponsor&id=".$id."'>Add Partners</a></li>";
                 $adminNav .= "<li><a href='?mode=manage&type=collaborator&id=".$id."'>Add People</a></li>";
+                $adminNav .= "<li><a data-toggle='modal' data-target='#delete'><span class='glyphicon glyphicon-trash'></span> Delete Project</a></li>";
             }
             else
             {
@@ -177,13 +172,16 @@ class navController {
         {
             if(isset($_SESSION['access_level']))
             {
-                if($_SESSION['access_level'] == 2)
+                if($_SESSION['access_level'] == 2 && strcmp($_SESSION['username'],$id) != 0)
                 {
                     $adminNav .= "<li><a href='?mode=admin&action=editUser&id=".$id."'><span class='glyphicon glyphicon-pencil'></span> Edit Profile</a></li>";
                 }
                 else
                 {
-                    $adminNav .= "<li><a href='?mode=edit&type=user'><span class='glyphicon glyphicon-pencil'></span> Edit Profile</a></li>";
+                    if($_SESSION['username'] == $id)
+                    {
+                        $adminNav .= "<li><a href='?mode=edit&type=user'><span class='glyphicon glyphicon-pencil'></span> Edit Profile</a></li>";
+                    }
                 }
             }
         }
@@ -202,7 +200,23 @@ class navController {
                 $adminNav .= "<li><a href='?mode=create&type=publication'><span class='glyphicon glyphicon-plus'></span> Create New Publication</a>";
             }
         }
-        $adminNav .= "</ul>";
+        else if($mode == "news")
+        {
+            if(strlen($id) > 0)
+            {
+                $adminNav .= "<li><a href='?mode=edit&type=news&id=".$id."'><span class='glyphicon glyphicon-pencil'></span> Edit Article</a></li>";
+                $adminNav .= "<li><a href='' data-toggle='modal' data-target='#delete'><span class='glyphicon glyphicon-trash'></span> Delete Article</a></li>";
+            }
+            else
+            {
+                $adminNav .= "<li><a href='?mode=create&type=news'><span class='glyphicon glyphicon-plus'></span> Create News Article</a>";
+            }
+        }
+        $end = "</ul>";
+        if(strlen($adminNav) > 0)
+        {
+            $adminNav = $beginning.$adminNav.$end;
+        }
         return $adminNav;
     }
 

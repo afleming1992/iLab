@@ -34,7 +34,7 @@ class profile
     public function createProfile()
     {
         //This function will only be called by the User Class to prevent multiple profiles being created for one user.
-        $result = $this->db->exec("INSERT INTO ".$this->db->getPrefix()."profile (username,real_name,email,website,bio,pure_id,linkedin,twitter,scholar,photo,role) VALUES ('".$this->getUsername()."','".$this->getRealName()."','".$this->getEmail()."','".$this->getWebsite()."','".$this->getBio()."','".$this->getPureId()."','".$this->getLinkedIn()."','".$this->getTwitter()."','".$this->getScholar()."','".$this->getPhoto()."','".$this->getRole()."')");
+        $result = $this->db->exec("INSERT INTO ".$this->db->getPrefix()."profile (username,real_name,email,website,bio,linkedin,twitter,scholar,photo,role) VALUES ('".$this->getUsername()."','".$this->getRealName()."','".$this->getEmail()."','".$this->getWebsite()."','".$this->getBio()."','".$this->getLinkedIn()."','".$this->getTwitter()."','".$this->getScholar()."','".$this->getPhoto()."','".$this->getRole()."')");
         if($result)
         {
             return true;
@@ -78,6 +78,42 @@ class profile
         else
         {
             return false;
+        }
+    }
+
+    public function getProjects()
+    {
+        $result = $this->db->query("SELECT projectId FROM project_collaborator WHERE username = '".$this->getUsername()."'");
+        if($result)
+        {
+            $projects = array();
+            while($data = $result->fetch())
+            {
+                $project = new Project($this->getDb(),$data['projectId']);
+                if($project->getProject())
+                {
+                    $projects[] = $project;
+                }
+            }
+            return $projects;
+        }
+    }
+
+    public function getPublications()
+    {
+        $result = $this->db->query("SELECT publicationId FROM publication_author WHERE username = '".$this->getUsername()."'");
+        if($result)
+        {
+            $publications = array();
+            while($data = $result->fetch())
+            {
+                $publication = new Publication($this->getDb(),$data['publicationId']);
+                if($publication->getPublication())
+                {
+                    $publications[] = $publication;
+                }
+            }
+            return $publications;
         }
     }
 

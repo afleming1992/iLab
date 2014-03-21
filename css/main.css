@@ -14,6 +14,12 @@ body
     font-size:12px;
 }
 
+.carousel-caption p
+{
+    background-color:#808080;
+    border-radius:3px;
+}
+
 .ordering
 {
     padding:5px;
@@ -22,6 +28,26 @@ body
 .profile
 {
     margin:5px;
+}
+
+.news
+{
+    padding: 1px;
+}
+
+.news:hover
+{
+    background-color:#F5F5F5;
+}
+
+.news-summary
+{
+    margin-bottom:5px;
+}
+
+.news .media-body
+{
+    padding:2px;
 }
 
 .green
@@ -39,6 +65,7 @@ body
     outline: none;
     border-color: #9ecaed;
     box-shadow: 0 0 10px #9ecaed;
+    cursor: pointer;
 }
 
 .crop {

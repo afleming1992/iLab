@@ -34,7 +34,7 @@
                     setcookie("access_key",$accessKey,$year);
                     $user->createAccessCookie($accessKey);
                 }
-                $this->loadLoginSuccessful();
+                $this->redirect("?mode=profile&user=".$_SESSION['username']);
             } else {
                 $this->loadLoginFailure($username);
             }
@@ -54,13 +54,6 @@
             }
         }
 
-        public function loadLoginSuccessful()
-        {
-            $this->loadPageHeader();
-            include("content/loginSuccess.php");
-            $this->loadFooter();
-        }
-
         public function loadLoginFailure($username)
         {
             $this->loadPageHeader();
@@ -73,6 +66,10 @@
         public function loadHomePage()
         {
             $this->loadPageHeader();
+            $projects = $this->loadRandomProjects();
+            $users = $this->loadRandomUsers();
+            $publications = $this->loadLatestPublications();
+            $articles = $this->loadLatestNews();
             include('content/homepage.php');
             $this->loadFooter();
         }
@@ -88,6 +85,28 @@
                     $user = $data;
                 }
                 include('content/adminContent.php');
+            }
+            $this->loadFooter();
+        }
+
+        public function loadStaffList()
+        {
+            $this->loadPageHeader();
+            $sideNav = $this->getNavController()->loadSideNavigation(2);
+            $adminSection = $this->getNavController()->loadPageAdmin("profile",null);
+            $result = $this->getDb()->query("SELECT * FROM profile");
+            if($result)
+            {
+                $users = array();
+                while($data = $result->fetch())
+                {
+                    $user = new Profile($this->getDb(),$data['username']);
+                    if($user->getProfile())
+                    {
+                        $users[] = $user;
+                    }
+                }
+                include('content/staffList.php');
             }
             $this->loadFooter();
         }
@@ -109,6 +128,30 @@
                         }
                     }
                 }
+
+                $publications = count($project->findPublications());
+
+                $item_per_page = 3;
+
+                $pages = ceil($publications/$item_per_page);
+                $pagination = '';
+                if($pages > 0)
+                {
+                    $pagination .= '<ul style="text-align:center;" class="pagination pagination-sm">';
+                    $pagination .= "<li id='pagination-li-previous' class='disabled'><a href='#'>&laquo;</a></li>";
+                    for($i = 1; $i<=$pages; $i++)
+                    {
+                        $active = "";
+                        if($i == 1)
+                        {
+                            $active = " active";
+                        }
+                        $pagination .= "<li id='".$i."-pagination-li' class='pagination-li".$active."'><a href='#' class='paginate_click' id='".$i."-page'>".$i."</a></li>";
+                    }
+                    $pagination .= "<li id='pagination-li-next'><a href='#'>&raquo;</a></li>";
+                    $pagination .= '</ul>';
+                }
+
                 include('content/projectView.php');
                 $this->loadFooter();
             } else {
@@ -131,6 +174,78 @@
             }
         }
 
+        public function loadRandomUsers()
+        {
+            $result = $this->getDb()->query("SELECT * FROM profile ORDER BY RAND() LIMIT 9;");
+            if($result)
+            {
+                $users = array();
+                while($data = $result->fetch())
+                {
+                    $user = new Profile($this->getDb(),$data['username']);
+                    if($user->getProfile())
+                    {
+                        $users[] = $user;
+                    }
+                }
+                return $users;
+            }
+        }
+
+        public function loadLatestPublications()
+        {
+            $result = $this->getDb()->query("SELECT * FROM publication ORDER BY year DESC ,name ASC LIMIT 3;");
+            if($result)
+            {
+                $publications = array();
+                while($data = $result->fetch())
+                {
+                    $publication = new Publication($this->getDb(),$data['publicationId']);
+                    if($publication->getPublication())
+                    {
+                        $publications[] = $publication;
+                    }
+                }
+                return $publications;
+            }
+        }
+
+        public function loadLatestNews()
+        {
+            $result = $this->getDb()->query("SELECT * FROM news ORDER BY createdAt DESC LIMIT 3;");
+            if($result)
+            {
+                $articles = array();
+                while($data = $result->fetch())
+                {
+                    $article = new News($this->getDb(),$data['newsId']);
+                    if($article->getNews())
+                    {
+                        $articles[] = $article;
+                    }
+                }
+                return $articles;
+            }
+        }
+
+        public function loadRandomProjects()
+        {
+            $result = $this->getDb()->query("SELECT * FROM project ORDER BY RAND() LIMIT 3");
+            if($result)
+            {
+                $projects = array();
+                while($data = $result->fetch())
+                {
+                    $project = new Project($this->getDb(),$data['projectId']);
+                    if($project->getProject())
+                    {
+                        $projects[] = $project;
+                    }
+                }
+                return $projects;
+            }
+        }
+
         public function loadEditProject($id)
         {
             $project = new Project($this->getDb(), $id);
@@ -145,6 +260,16 @@
                     $this->checkLoginandAccess(3); //This will send the user to Access Denied
                 }
             }
+        }
+
+        public function loadCreateProject()
+        {
+            $this->loadPageHeader();
+            if($this->checkLoginandAccess(1))
+            {
+                include('forms/editProject.php');
+            }
+            $this->loadFooter();
         }
 
         public function editProject($id, $name, $description, $startDate, $endDate, $website, $newlogo)
@@ -203,6 +328,7 @@
             $page = new Page($this->getDb(), 0);
             $page->setTitle($title);
             $page->setSection(new SectionInfo($this->getDb(), $section));
+            $page->getSection()->getHighestNavOrder();
             $page->setAuthor(new Profile($this->getDb(), $_SESSION['username']));
             $page->setRestricted($restricted);
             $page->setContent($content);
@@ -303,21 +429,32 @@
         public function loadPublicationList()
         {
             //Page Set up
-            $title = "Publications";
+            if(isset($_GET['username']))
+            {
+                $user = new Profile($this->getDb(),$_GET['username']);
+                $user->getProfile();
+                $title = "Publications by ".$user->getRealName();
+            }
+            else
+            {
+                $title = "Publications";
+            }
             $sideNav = $this->getNavController()->loadSideNavigation(4);
             $adminSection = $this->getNavController()->loadPageAdmin("publication",NULL);
 
             //Pagination Set up
-            $item_per_page = 5;
+            $item_per_page = 10;
 
             $results = $this->getDb()->query("SELECT COUNT(*) AS count FROM ".$this->getDb()->getPrefix()."publication");
             $get_total_rows = $results->fetch(); //total records
+
+            $projects = $this->getAllProjects("all");
 
             //break total records into pages
             $pages = ceil($get_total_rows['count']/$item_per_page);
             //create pagination
             $pagination = '';
-            if($pages > 1)
+            if($pages >= 1)
             {
                 $pagination .= '<ul style="text-align:center;" class="pagination pagination-lg">';
                 $pagination .= "<li id='pagination-li-previous' class='disabled'><a href='#'>&laquo;</a></li>";
@@ -325,7 +462,15 @@
                 {
                     $pagination .= "<li id='".$i."-pagination-li' class='pagination-li'><a href='#' class='paginate_click' id='".$i."-page'>".$i."</a></li>";
                 }
-                $pagination .= "<li id='pagination-li-next'><a href='#'>&raquo;</a></li>";
+
+                if($pages != 1)
+                {
+                    $pagination .= "<li id='pagination-li-next'><a href='#'>&raquo;</a></li>";
+                }
+                else
+                {
+                    $pagination .= "<li id='pagination-li-next' class='disabled'><a href='#'>&raquo;</a></li>";
+                }
                 $pagination .= '</ul>';
             }
 
@@ -432,6 +577,62 @@
             }
         }
 
+        public function loadNews($id)
+        {
+            $news = new News($this->getDb(),$id);
+            if($news->getNews())
+            {
+                $adminSection = $this->getNavController()->loadPageAdmin("news",$id);
+                $sideNav = $this->getNavController()->loadSideNavigation(6);
+                $date = date("D d F Y",strtotime($news->getCreated()));
+                $this->loadPageHeader();
+                include("content/viewNews.php");
+                $this->loadFooter();
+            }
+        }
+
+        public function loadNewsList()
+        {
+            //Page Set up
+            $title = "News Archive";
+            $sideNav = $this->getNavController()->loadSideNavigation(6);
+            $adminSection = $this->getNavController()->loadPageAdmin("news",NULL);
+
+            //Pagination Set up
+            $item_per_page = 10;
+
+            $results = $this->getDb()->query("SELECT COUNT(*) AS count FROM ".$this->getDb()->getPrefix()."news");
+            $get_total_rows = $results->fetch(); //total records
+
+            //break total records into pages
+            $pages = ceil($get_total_rows['count']/$item_per_page);
+            //create pagination
+            $pagination = '';
+            if($pages >= 1)
+            {
+                $pagination .= '<ul style="text-align:center;" class="pagination pagination-lg">';
+                $pagination .= "<li id='pagination-li-previous' class='disabled'><a href='#'>&laquo;</a></li>";
+                for($i = 1; $i<=$pages; $i++)
+                {
+                    $pagination .= "<li id='".$i."-pagination-li' class='pagination-li'><a href='#' class='paginate_click' id='".$i."-page'>".$i."</a></li>";
+                }
+
+                if($pages != 1)
+                {
+                    $pagination .= "<li id='pagination-li-next'><a href='#'>&raquo;</a></li>";
+                }
+                else
+                {
+                    $pagination .= "<li id='pagination-li-next' class='disabled'><a href='#'>&raquo;</a></li>";
+                }
+                $pagination .= '</ul>';
+            }
+
+            $this->loadPageHeader();
+            include('content/newsList.php');
+            $this->loadFooter();
+        }
+
         public function redirect($url)
         {
             ?>
@@ -439,6 +640,34 @@
                 window.location = "index.php<?php echo $url; ?>"
             </script>
         <?php
+        }
+
+        public function loadCreateNews()
+        {
+            $this->loadPageHeader();
+            if($this->checkLoginandAccess(0))
+            {
+                include("forms/editNews.php");
+            }
+            $this->loadFooter();
+        }
+
+        public function loadEditNews($id)
+        {
+            $this->loadPageHeader();
+            $news = new News($this->getDb(),$id);
+            if($news->getNews())
+            {
+                if($this->checkLoginandAccess(0) || $news->getAuthor() == $_SESSION['username'])
+                {
+                    include("forms/editNews.php");
+                }
+            }
+            else
+            {
+                $this->loadUpdateStatus("ERROR");
+            }
+            $this->loadFooter();
         }
 
         public function loadUpdateStatus($message)
@@ -595,10 +824,71 @@
             if($profile->getProfile())
             {
                 $sideNav = $this->getNavController()->loadSideNavigation(2);
-                if($user == $_SESSION['username'] || $this->checkLoginandAccess(2))
+                $adminSection = $this->getNavController()->loadPageAdmin("profile",$profile->getUsername());
+
+                $publications = array();
+                $projects = $profile->getProjects();
+
+                $query = "SELECT A.publicationId FROM publication P, publication_author A WHERE A.username = '".$profile->getUsername()."' AND P.publicationId = A.publicationId ORDER BY P.year DESC, P.name ASC";
+                $result = $this->getDb()->query($query);
+                if($result)
                 {
-                    $adminSection = $this->getNavController()->loadPageAdmin("profile",$user);
+                    $publicationCount = $result->rowCount();
+                    $count = 0;
+                    while($data = $result->fetch())
+                    {
+                        $publication = new Publication($this->getDb(),$data['publicationId']);
+                        if($publication->getPublication())
+                        {
+                            $publications[] = $publication;
+                            $count++;
+                        }
+                        if($count >= 3)
+                        {
+                            break;
+                        }
+                    }
                 }
+
+                $pub_output = array();
+                foreach($publications as $publication)
+                {
+                    $output = "<a href='?mode=publication&id=".$publication->getId()."'><div class='well'>";
+
+                    $authorResults = $this->getDb()->query("SELECT * FROM publication_author WHERE publicationId = '".$publication->getId()."'");
+                    $first = true;
+                    while($author = $authorResults->fetch())
+                    {
+                        if(!$first)
+                        {
+                            $output .= ", ";
+                        }
+                        $first = false;
+                        if($author['username'] == "null" || strlen($author['username']) == 0)
+                        {
+                            $output .= $author['nameOfAuthor']." ";
+                        }
+                        else
+                        {
+                            $RealNameResult = $this->getDb()->query("SELECT real_name FROM profile WHERE username = '".$author['username']."'");
+                            if($RealNameResult)
+                            {
+                                $realname = $RealNameResult->fetch();
+                                $output .= $realname['real_name']." ";
+                            }
+                        }
+                    }
+                    $title = "<b>".$publication->getName()."</b>";
+                    $year = "<em>(".$publication->getYear().")</em>";
+                    if(strlen($publication->getPublishedIn()) > 0)
+                    {
+                        $publishedIn = $publication->getPublishedIn();
+                    }
+                    $output .= $year." ".$title.", <em>".$publishedIn."</em>, ".$publication->getPublisher()."</div></a>";
+                    $pub_output[] = $output;
+                }
+
+
                 include("content/viewProfile.php");
             }
             else
@@ -644,11 +934,13 @@
         public function getAllProjects($past)
         {
             if ($past == 1) {
-                $where = "endDate < CURDATE()";
+                $where = "WHERE endDate < CURDATE()";
+            } else if($past == 0) {
+                $where = "WHERE endDate > CURDATE()";
             } else {
-                $where = "endDate > CURDATE()";
+                $where = "";
             }
-            $result = $this->getDb()->query("SELECT * FROM project WHERE " . $where);
+            $result = $this->getDb()->query("SELECT * FROM project " . $where);
             $projects = array();
             if ($result) {
                 while ($data = $result->fetch()) {
@@ -842,6 +1134,65 @@
                 }
             } else {
                 echo "Invalid file ".$file["size"];
+            }
+        }
+
+        public function reorder($pageId,$direction)
+        {
+            $page = new Page($this->getDb(),$pageId);
+            if($page->getPageDetails())
+            {
+                $currentPageOrder = $page->getNavOrder();
+                if(($direction == -1 && $currentPageOrder == 1) || ($direction == 1 && $currentPageOrder == $page->getSection()->getHighestNavOrder()))
+                {
+                    $page->redirectToPage();
+                }
+                else
+                {
+                    if(strcmp($direction,"up") == 0)
+                    {
+                        $newPageOrder = $currentPageOrder - 1;
+                    }
+                    else
+                    {
+                        $newPageOrder = $currentPageOrder + 1;
+                    }
+                    $result = $this->getDb()->query("SELECT page_id FROM page WHERE navOrder = '".$newPageOrder."' AND page_id <> '".$page->getPageId()."' AND section = '".$page->getSection()->getSectionId()."'");
+                    if($result)
+                    {
+                        $data = $result->fetch();
+                        $switchPage = new Page($this->getDb(),$data['page_id']);
+                        if($switchPage->getPageDetails())
+                        {
+                            $tmp = $page->getNavOrder();
+                            $page->setNavOrder($switchPage->getNavOrder());
+                            $switchPage->setNavOrder($tmp);
+
+
+
+                            if($page->updatePage() && $switchPage->updatePage())
+                            {
+                                $page->redirectToPage();
+                            }
+                        }
+                        else
+                        {
+                            $page->setNavOrder($newPageOrder);
+                            if($page->updatePage())
+                            {
+                                $page->redirectToPage();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        $page->redirectToPage();
+                    }
+                }
+            }
+            else
+            {
+                $this->loadUpdateStatus("<div class='alert alert-danger'><b>Page Not Found</b><br/><p>Page could not be found in order to Reorder</p></div>");
             }
         }
 

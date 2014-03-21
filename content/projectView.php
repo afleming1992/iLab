@@ -90,7 +90,7 @@
                                 if(strlen($project->getWebsite()) > 0)
                                 {
                                     ?>
-                                        <a target='_blank' href='<?php echo $project->getWebsite(); ?>' class="btn btn-info"><span class="glyphicon glyphicon-globe"></span> Website</a>
+                                        <a target='_blank' href='http://<?php echo $project->getWebsite(); ?>' class="btn btn-info"><span class="glyphicon glyphicon-globe"></span> Website</a>
                                     <?php
                                 }
                             ?>
@@ -132,7 +132,12 @@
                                   <h4 class="panel-title">Publications</h4>
                              </div>
                              <div class="panel-body">
+                                <div id="publications">
 
+                                </div>
+                                <div style="text-align: center;">
+                                    <?php echo $pagination ?>
+                                </div>
                              </div>
                          </div>
                     </div>
@@ -153,3 +158,135 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Delete Project</h4>
+            </div>
+            <div class="modal-body">
+               <a class="btn btn-block btn-danger" href="?mode=delete&type=project&id=<?php echo $project->getId() ?>">Yes</a>
+                <a class="btn btn-block btn-success" href="" data-dismiss="modal">No</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var numberPerPage = 3;
+    $(document).ready(function(){
+
+        $('#publications').load("ajax/getPublicationList.php",{'page':0,'numberPerPage':3,'project':'<?php echo $project->getId(); ?>'});
+
+        $('.paginate_click').click(function(e){
+            var limit = <?php echo $pages ?>;
+            $("#publications").html("");
+            $("#publications").prepend("<div style='margin-left:auto;margin-right:auto;'>Loading...</div>");
+
+            var clicked_id = $(this).attr('id').split('-');
+            var page_num = parseInt(clicked_id[0]);
+
+            $('.pagination-li').removeClass('active');
+
+            $("#publications").load("ajax/getPublicationList.php",{'page': (page_num-1),'numberPerPage':3,'project':'<?php echo $project->getId(); ?>'}, function(){
+
+            });
+
+            $("#"+page_num+"-pagination-li").addClass('active');
+
+            if(page_num == 1)
+            {
+                $("#pagination-li-previous").addClass('disabled');
+            }
+            else
+            {
+                $("#pagination-li-previous").removeClass('disabled');
+            }
+
+            if(page_num == limit)
+            {
+                $("#paginate-li-next").addClass('disabled');
+            }
+            else
+            {
+                $("#paginate-li-next").removeClass("disabled");
+            }
+
+            return false;
+        });
+
+        $("#pagination-li-next").click(function (e){
+            $("#publications").html("");
+            $("#publications").prepend('<div style="margin-left:auto;margin-right:auto;" class="loading-indication">Loading...</div>');
+            var limit = <?php echo $pages ?>;
+            var active = $('.pagination').find('.active').attr('id').split("-");
+            var page_num = parseInt(active[0]) + 1;
+
+            $('.pagination-li').removeClass('active');
+
+            $("#publications").load("ajax/getPublicationList.php", {'page': (page_num-1),'numberPerPage':3,'project':'<?php echo $project->getId(); ?>'}, function(){
+
+            });
+
+            $("#"+page_num+"-pagination-li").addClass('active'); //add active class to currently clicked element
+
+            if(page_num == 1)
+            {
+                $("#pagination-li-previous").addClass('disabled');
+            }
+            else
+            {
+                $("#pagination-li-previous").removeClass('disabled');
+            }
+
+            if(page_num == limit)
+            {
+                $("#pagination-li-next").addClass('disabled');
+            }
+            else
+            {
+                $("#pagination-li-next").removeClass('disabled');
+            }
+
+            return false; //prevent going to herf link
+
+        });
+
+        $("#pagination-li-previous").click(function (e){
+            $("#publications").html("");
+            $("#publications").prepend('<div style="margin-left:auto;margin-right:auto;" class="loading-indication">Loading...</div>');
+            var limit = <?php echo $pages ?>;
+            var active = $('.pagination').find('.active').attr('id').split("-");
+            var page_num = parseInt(active[0]) - 1;
+
+            $('.pagination-li').removeClass('active');
+
+            $("#publications").load("ajax/getPublicationList.php", {'page': (page_num-1),'numberPerPage':3,'project':'<?php echo $project->getId(); ?>'}, function(){
+
+            });
+
+            $("#"+page_num+"-pagination-li").addClass('active'); //add active class to currently clicked element
+
+            if(page_num == 1)
+            {
+                $("#pagination-li-previous").addClass('disabled');
+            }
+            else
+            {
+                $("#pagination-li-previous").removeClass('disabled');
+            }
+
+            if(page_num == limit)
+            {
+                $("#pagination-li-next").addClass('disabled');
+            }
+            else
+            {
+                $("#pagination-li-next").removeClass('disabled');
+            }
+
+            return false; //prevent going to herf link
+
+        });
+    });
+</script>

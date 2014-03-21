@@ -87,7 +87,20 @@
 </script>
 <div class="panel panel-success">
     <div class="panel-heading">
+        <?php
+            if($_GET['mode'] == "create")
+            {
+                ?>
+                 <h3 class="panel-title">Create Project</h3>
+                <?php
+            }
+            else
+            {
+        ?>
         <h3 class="panel-title">Edit Project</h3>
+        <?php
+            }
+        ?>
     </div>
     <div class="panel-body">
         <?php

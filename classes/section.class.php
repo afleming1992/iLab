@@ -39,7 +39,7 @@ class section
 
     public function findPages()
     {
-        $result = $this->db->query("SELECT * FROM ".$this->db->getPrefix()."page WHERE section = '".$this->getSectionId()."' AND page_id <> '".$this->getHomepage()->getPageId()."'");
+        $result = $this->db->query("SELECT * FROM ".$this->db->getPrefix()."page WHERE section = '".$this->getSectionId()."' ORDER BY navOrder ASC");
         $rowCount = $result->rowCount();
         if($rowCount > 0)
         {

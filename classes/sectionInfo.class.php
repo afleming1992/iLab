@@ -38,6 +38,20 @@ class SectionInfo
         }
     }
 
+    public function getHighestNavOrder()
+    {
+        $result = $this->getDb()->query("SELECT MAX(navOrder) AS max FROM page WHERE section = '".$this->getSectionId()."'");
+        if($result)
+        {
+            $data = $result->fetch();
+            return $data['max'];
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     /**
      * @param mixed $db
      */

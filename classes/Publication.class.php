@@ -271,7 +271,7 @@ class Publication
 
     public function getDownloadsByMonth()
     {
-        $result = $this->getDb()->query("SELECT MONTH(date) as month,count(downloadID) as count FROM publication_download WHERE date >= DATE_SUB(CURDATE(),INTERVAL 12 MONTH) GROUP BY MONTH(date) ORDER BY date ASC;");
+        $result = $this->getDb()->query("SELECT MONTH(date) as month,count(downloadID) as count FROM publication_download WHERE publicationId = '".$this->getId()."' AND date >= DATE_SUB(CURDATE(),INTERVAL 12 MONTH) GROUP BY MONTH(date) ORDER BY date ASC;");
         $downloads[] = array();
         for ($i = 11; $i >= 0; $i--)
         {
@@ -327,6 +327,43 @@ class Publication
                 return false;
             }
         }
+    }
+
+    public function generateLink()
+    {
+        $output = "<a href='?mode=publication&id=".$this->getId()."'><div class='well'>";
+
+        $authorResults = $this->getDb()->query("SELECT * FROM publication_author WHERE publicationId = '".$this->getId()."'");
+        $first = true;
+        while($author = $authorResults->fetch())
+        {
+            if(!$first)
+            {
+                $output .= ", ";
+            }
+            $first = false;
+            if($author['username'] == "null" || strlen($author['username']) == 0)
+            {
+                $output .= $author['nameOfAuthor']." ";
+            }
+            else
+            {
+                $RealNameResult = $this->getDb()->query("SELECT real_name FROM profile WHERE username = '".$author['username']."'");
+                if($RealNameResult)
+                {
+                    $realname = $RealNameResult->fetch();
+                    $output .= $realname['real_name']." ";
+                }
+            }
+        }
+        $title = "<b>".$this->getName()."</b>";
+        $year = "<em>(".$this->getYear().")</em>";
+        if(strlen($this->getPublishedIn()) > 0)
+        {
+            $publishedIn = $this->getPublishedIn();
+        }
+        $output .= $year." ".$title.", <em>".$publishedIn."</em>, ".$this->getPublisher()."</div></a>";
+        return $output;
     }
 
 

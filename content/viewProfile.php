@@ -13,7 +13,7 @@
             </div>
         </div>
         <?php
-            if($admin || $_SESSION['access_level'] > 1)
+            if(strlen($adminSection) > 0)
             {
                 ?>
                 <div class="panel panel-default">
@@ -23,12 +23,12 @@
                         </h1>
                     </div>
                     <div class="panel-body" style="padding:0">
-                        <?php
-                            echo $adminSection;
+                      <?php
+                                echo $adminSection;
                         ?>
                     </div>
                 </div>
-            <?php
+                <?php
             }
         ?>
     </div>
@@ -85,12 +85,55 @@
                             <div class="panel-heading">
                                 Projects I work on
                             </div>
+                            <div class="panel-body">
+                                <?php
+                                    if(count($projects) == 0)
+                                    {
+                                        ?>
+                                            <div class="well red">
+                                                I am currently not part of any projects.
+                                            </div>
+                                        <?php
+                                    }
+                                    else
+                                    {
+                                        foreach($projects as $project)
+                                        {
+                                            echo $project->generateLink();
+                                        }
+                                    }
+                                ?>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                My Publications
+                                My Latest Publications
+                            </div>
+                            <div class="panel-body">
+                                <div id="publications">
+                                    <?php
+                                        if(count($pub_output) == 0)
+                                        {
+                                            ?>
+                                                <div class="well red">
+                                                    I currently do not have any publications on the website
+                                                </div>
+                                            <?php
+                                        }
+                                        else
+                                        {
+                                            foreach($pub_output as $output)
+                                            {
+                                                echo $output;
+                                            }
+                                            ?>
+                                            <a href="?mode=publication&username=<?php echo $profile->getUsername(); ?>" class="btn btn-success btn-block btn-sm">All <?php echo $publicationCount ?> of my Publications</a>
+                                            <?php
+                                        }
+                                    ?>
+                                </div>
                             </div>
                         </div>
                     </div>

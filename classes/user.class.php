@@ -49,7 +49,7 @@ class user {
 
     public function updateUser()
     {
-        $result = $this->db->query("UPDATE user SET password = '".$this->getPassword()."', hidden = '".$this->getHidden()."', salt = '".$this->getSalt()."', access_level = '".$this->getAccessLevel()."';");
+        $result = $this->db->query("UPDATE user SET password = '".$this->getPassword()."', hidden = '".$this->getHidden()."', salt = '".$this->getSalt()."', access_level = '".$this->getAccessLevel()."' WHERE username = '".$this->getUsername()."';");
         if($result)
         {
             $result = $this->getProfile()->updateProfile();

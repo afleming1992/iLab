@@ -54,7 +54,7 @@
                         {
                             ?>
                             <table class="table table-striped">
-                                <tr><th>Profile Picture</th><th>Name</th><th>Admin?</th><th>Hidden?</th><th>Actions</th></tr>
+                                <tr><th>Profile Picture</th><th>Name</th><th>Admin?</th><th>Don't show on Project Page</th><th>Actions</th></tr>
                                 <?php
                                     foreach($collaborators as $collaborator)
                                     {
@@ -66,11 +66,11 @@
                                                     <?php
                                                         if($collaborator['admin'])
                                                         {
-                                                            echo "<span class='green glyphicon glyphicon-ok'></span>";
+                                                            echo "<span class='green'><b>Yes</b></span>";
                                                         }
                                                         else
                                                         {
-                                                            echo "<span class='red glyphicon glyphicon-remove'></span>";
+                                                            echo "<span class='red'><b>No</b></span>";
                                                         }
                                                     ?>
                                                 </td>
@@ -78,11 +78,11 @@
                                                     <?php
                                                         if($collaborator['hidden'])
                                                         {
-                                                            echo "<span class='green glyphicon glyphicon-ok'></span>";
+                                                            echo "<span class='green'><b>Yes</b></span>";
                                                         }
                                                         else
                                                         {
-                                                            echo "<span class='red glyphicon glyphicon-remove'></span>";
+                                                            echo "<span class='red'><b>No</b></span>";
                                                         }
                                                     ?>
                                                 </td>
